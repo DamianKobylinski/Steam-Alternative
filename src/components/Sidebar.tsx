@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const items = [
   {
@@ -75,25 +76,12 @@ const SidebarComponent: FC = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-5 py-10">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex place-items-center gap-5">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p className="text-2xl">Shad</p>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn >
+          <UserButton />
+        </SignedIn>
       </SidebarFooter>
     </Sidebar>
   );
