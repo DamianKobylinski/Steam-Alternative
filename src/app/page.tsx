@@ -64,15 +64,17 @@ const new_games = [
 
 const Home: FC = () => {
   return (
-    <>
+    <div className="mx-5">
       <p className="text-3xl my-4 text-white">Popular</p>
-      <div className="flex flex-row ">
+      <div className="flex flex-col lg:flex-row gap-5">
         <Popular />
         <Salary />
       </div>
-      <Shelf name="New Games" data={new_games} />
-      <Shelf name="Popular Games" data={new_games} />
-    </>
+      <div className="flex flex-col w-full gap-5">
+        <Shelf name="New Games" data={new_games} />
+        <Shelf name="Popular Games" data={new_games} />
+      </div>
+    </div>
   );
 };
 

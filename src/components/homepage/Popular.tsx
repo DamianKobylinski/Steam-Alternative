@@ -43,7 +43,6 @@ const popular = [
 ];
 
 const Popular: FC = () => {
-  const [current, setCurrent] = useState(3);
   return (
     <div
       style={{
@@ -51,7 +50,7 @@ const Popular: FC = () => {
           "url(https://wallpapers.com/images/hd/hogwarts-legacy-magical-castle-panorama-4tcun0dm98b9olu0.jpg)",
         backgroundSize: "cover",
       }}
-      className="flex flex-col h-96 px-5 py-5 lg:min-w-[700px] rounded-xl text-white"
+      className="flex flex-col w-full h-96 p-5 rounded-xl"
     >
       <ul className="flex justify-center">
         <li
@@ -85,24 +84,24 @@ const Popular: FC = () => {
           className="min-w-4 min-h-4 bg-white mx-2 rounded-full cursor-pointer"
         ></li>
       </ul>
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-auto">
+      <div className="flex flex-col lg:flex-row mt-auto">
         <div>
-          <p className="text-4xl font-bold my-4">{popular[current].title}</p>
-          <p className="hidden lg:block text-base my-4">
-            {popular[current].description}
+          <p className="text-4xl font-bold my-4">{popular[1].title}</p>
+          <p className="hidden lg:block text-base my-4 w-1/2">
+            {popular[1].description}
           </p>
           <div className="hidden lg:flex ">
-            {popular[current].badges.map((badge) => (
+            {popular[1].badges.map((badge) => (
               <Badge key={badge} className="mx-2" variant={"secondary"}>
                 {badge}
               </Badge>
             ))}
           </div>
         </div>
-        <div className="flex gap-2 justify-start md:justify-end mt-auto">
-          <div className="cursor-pointer bg-[#CB2020] flex flex-col w-full md:w-[200px] items-center justify-center rounded-xl font-bold">
+        <div className="">
+          <div className="cursor-pointer bg-[#CB2020] flex flex-col items-center justify-center rounded-xl font-bold">
             <p>Buy now</p>
-            <p className="text-2xl">{popular[current].price} zł</p>
+            <p className="text-2xl">{popular[1].price} zł</p>
           </div>
           <div className="flex justify-center items-center bg-[#C4C4C4] p-3 bg-opacity-50 rounded-xl cursor-pointer">
             <Heart className="z-20" height="25px" width="25px" />

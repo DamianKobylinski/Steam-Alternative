@@ -20,7 +20,7 @@ const Shelf: FC<ShelfProps> = ({ name, data }) => {
     <>
       <p className="text-3xl my-4 text-white font-">{name}</p>
       <ScrollArea>
-        <div className="flex w-11/12 justify-start gap-10 overflow-hidden">
+        <div className="flex w-full justify-start gap-10 overflow-hidden">
           {data?.map((item) => (
             <div key={item.id} className="cursor-pointer">
               <Link href={`/game/${item.id}`}>

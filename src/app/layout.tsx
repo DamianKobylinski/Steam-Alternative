@@ -34,12 +34,12 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
         >
           <SidebarProvider>
             <SidebarComponent />
             <SidebarTrigger className="fixed z-10" />
-            <main className="dark mx-5">{children}</main>
+            <main className="w-full dark">{children}</main>
           </SidebarProvider>
         </ThemeProvider>
       </body>
