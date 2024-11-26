@@ -1,8 +1,49 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Heart } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
+
+const popular = [
+  {
+    title: "Hogwarts Legacy",
+    description:
+      "Hogwarts Legacy is an immersive, open-world action RPG. Now you can take control of the action and be at the center of your own adventure in the wizarding world.",
+    badges: ["Magic", "Open World", "Fantasy", "Adventure"],
+    price: 150,
+  },
+  {
+    title: "Elden Ring",
+    description:
+      "Elden Ring is an upcoming action role-playing game developed by FromSoftware and published by Bandai Namco Entertainment.",
+    badges: ["Action", "RPG", "Fantasy", "Adventure"],
+    price: 200,
+  },
+  {
+    title: "The Witcher 3: Wild Hunt",
+    description:
+      "The Witcher 3: Wild Hunt is a 2015 action role-playing game developed and published by CD Projekt.",
+    badges: ["Action", "RPG", "Fantasy", "Adventure"],
+    price: 100,
+  },
+  {
+    title: "Cyberpunk 2077",
+    description:
+      "Cyberpunk 2077 is a 2020 action role-playing video game developed and published by CD Projekt.",
+    badges: ["Action", "RPG", "Sci-Fi", "Adventure"],
+    price: 250,
+  },
+  {
+    title: "The Elder Scrolls V: Skyrim",
+    description:
+      "The Elder Scrolls V: Skyrim is an action role-playing game developed by Bethesda Game Studios and published by Bethesda Softworks.",
+    badges: ["Action", "RPG", "Fantasy", "Adventure"],
+    price: 120,
+  }
+];
 
 const Popular: FC = () => {
+  const [current, setCurrent] = useState(3);
   return (
     <div
       style={{
@@ -46,32 +87,22 @@ const Popular: FC = () => {
       </ul>
       <div className="grid grid-cols-1 md:grid-cols-2 mt-auto">
         <div>
-          <p className="text-4xl font-bold my-4">Hogwarts Legacy</p>
+          <p className="text-4xl font-bold my-4">{popular[current].title}</p>
           <p className="hidden lg:block text-base my-4">
-            Hogwarts Legacy is an immersive, open-world action RPG. Now you can
-            take control of the action and be at the center of your own
-            adventure in the wizarding world.
+            {popular[current].description}
           </p>
-
           <div className="hidden lg:flex ">
-            <Badge className="mr-2" variant={"secondary"}>
-              Magic
-            </Badge>
-            <Badge className="mx-2" variant={"secondary"}>
-              Open World
-            </Badge>
-            <Badge className="mx-2" variant={"secondary"}>
-              Fantasy
-            </Badge>
-            <Badge className="mx-2" variant={"secondary"}>
-              Adventure
-            </Badge>
+            {popular[current].badges.map((badge) => (
+              <Badge key={badge} className="mx-2" variant={"secondary"}>
+                {badge}
+              </Badge>
+            ))}
           </div>
         </div>
         <div className="flex gap-2 justify-start md:justify-end mt-auto">
           <div className="cursor-pointer bg-[#CB2020] flex flex-col w-full md:w-[200px] items-center justify-center rounded-xl font-bold">
             <p>Buy now</p>
-            <p className="text-2xl">150.00 zł</p>
+            <p className="text-2xl">{popular[current].price} zł</p>
           </div>
           <div className="flex justify-center items-center bg-[#C4C4C4] p-3 bg-opacity-50 rounded-xl cursor-pointer">
             <Heart className="z-20" height="25px" width="25px" />

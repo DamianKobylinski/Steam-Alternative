@@ -31,10 +31,10 @@ export default function RootLayout({
       <body
         className={`bg-[#1C2541] ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
+        <SidebarProvider >
           <SidebarComponent />
-          <SidebarTrigger />
-          <main className="w-full mx-5">{children}</main>
+          <SidebarTrigger className="fixed z-10"/>
+          <main className="dark mx-5">{children}</main>
         </SidebarProvider>
       </body>
     </html>
