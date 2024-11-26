@@ -66,7 +66,7 @@ const Home: FC = () => {
   return (
     <>
       <p className="text-3xl my-4 text-white">Popular</p>
-      <div className="flex flex-col lg:flex-row gap-10">
+      <div className="flex flex-row ">
         <Popular />
         <Salary />
       </div>
