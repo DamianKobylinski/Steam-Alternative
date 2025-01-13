@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarComponent from "@/components/Sidebar";
-import { ThemeProvider } from "./providers";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = localFont({
@@ -28,19 +27,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const darkMode = true; // or set it based on your logic
+
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className={darkMode ? "dark" : ""}>
         <body
           className={`dark:--background  ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ThemeProvider attribute="class" defaultTheme="light">
-            <SidebarProvider>
-              <SidebarComponent />
-              <SidebarTrigger className="fixed z-10" />
-              <main className="w-full dark">{children}</main>
-            </SidebarProvider>
-          </ThemeProvider>
+          <SidebarProvider>
+            <SidebarComponent />
+            <SidebarTrigger className="fixed z-10" />
+            <main className="w-full dark">{children}</main>
+          </SidebarProvider>
         </body>
       </html>
     </ClerkProvider>
