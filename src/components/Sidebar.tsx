@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 import { Calendar, Home, ShoppingBag, Star } from "lucide-react";
 import {
@@ -13,14 +14,13 @@ import {
 } from "./ui/sidebar";
 import Link from "next/link";
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+  UserProfile,
+  useUser,
+} from "@clerk/nextjs";
 
 const items = [
   {
@@ -46,54 +46,60 @@ const items = [
 ];
 
 const SidebarComponent: FC = () => {
+  const user = useUser();
+
   return (
     <Sidebar className="fixed">
       <SidebarHeader>
-        <p className="text-3xl p-5 text-center">Steam Alternative</p>
+        <p className="text-3xl p-5 text-center mt-12">Steam Alternative</p>
       </SidebarHeader>
       <SidebarContent className="mx-auto mt-5">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="flex gap-5">
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                {items
+                .filter((item) => {
+                  if (user.user?.id) {
+                  return true;
+                  }
+                  return item.title === "Home" || item.title === "Shop";
+                })
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link className="p-5" href={item.url}>
-                      <item.icon
-                        style={{
-                          width: "25px",
-                          height: "25px",
-                        }}
-                      />
-                      <span className="text-2xl">{item.title}</span>
+                    <item.icon
+                      style={{
+                      width: "25px",
+                      height: "25px",
+                      }}
+                    />
+                    <span className="text-2xl">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-5 py-10">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex place-items-center gap-5">
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <p className="text-2xl">Shad</p>
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <div className="flex gap-5 place-items-center">
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Open chat"
+                  labelIcon={<span>💬</span>}
+                  onClick={() => alert("init chat")}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </div>
+        </SignedIn>
       </SidebarFooter>
     </Sidebar>
   );

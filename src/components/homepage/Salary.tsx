@@ -1,55 +1,81 @@
-import { FC } from "react";
+"use client";
+import { FC, useState } from "react";
+import { Game } from "@/interfaces/game";
+import Link from "next/link";
+import { useEffect } from "react";
 
-const Salary: FC = () => {
+interface SalaryProps {
+  sale: {
+    id: number;
+    game_id: number;
+    percent_of_bargain: number;
+  }[];
+  data: Game[];
+}
+
+const Salary: FC<SalaryProps> = ({ sale, data }) => {
+  const [salaryGame, setSalaryGame] = useState(data[0]);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSalaryGame((prevGame) => {
+        const currentIndex = data.findIndex((game) => game.game_id === prevGame.game_id);
+        const nextIndex = (currentIndex + 1) % data.length;
+        return data[nextIndex];
+      });
+    }, 17000);
+
+    return () => clearInterval(interval);
+  }, [data]);
+
   return (
     <div
       style={{
-        backgroundImage:
-          "url(https://image.api.playstation.com/vulcan/ap/rnd/202406/0500/8f15268257b878597757fcc5f2c9545840867bc71fc863b1.png)",
+        backgroundImage: `url(${salaryGame?.bg_image})`,
         backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
       }}
-      className="flex flex-col mx-auto h-96 w-full sm:w-96 md:min-w-[400px] rounded-xl"
+      className="flex flex-col h-96 pt-5 w-full sm:w-[400px] lg:w-[600px] rounded-xl"
     >
-      <ul className="my-5 flex justify-center">
-        <li
-          style={{
-            boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-          }}
-          className="min-w-4 min-h-4 bg-[#3A506B] mr-2 rounded-full cursor-pointer"
-        ></li>
-        <li
-          style={{
-            boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-          }}
-          className="min-w-4 min-h-4 bg-white mx-2 rounded-full cursor-pointer"
-        ></li>
-        <li
-          style={{
-            boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-          }}
-          className="min-w-4 min-h-4 bg-white mx-2 rounded-full cursor-pointer"
-        ></li>
-        <li
-          style={{
-            boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-          }}
-          className="min-w-4 min-h-4 bg-white mx-2 rounded-full cursor-pointer"
-        ></li>
-        <li
-          style={{
-            boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
-          }}
-          className="min-w-4 min-h-4 bg-white mx-2 rounded-full cursor-pointer"
-        ></li>
+      <ul className="flex justify-center">
+        {sale.map((game) => (
+          <li
+            key={game.id}
+            style={{
+              boxShadow: "inset 2px 2px 4px rgba(0, 0, 0, 0.5)",
+            }}
+            className={`min-w-4 min-h-4 ${
+              game.game_id === salaryGame.game_id ? "bg-[#3A506B]" : "bg-white"
+            }  mr-2 rounded-full cursor-pointer transition-colors duration-700`}
+            onClick={() => {
+              const foundGame = data.find(
+                (item) => item.game_id === game.game_id
+              );
+              if (foundGame) {
+                setSalaryGame(foundGame);
+              }
+            }}
+          ></li>
+        ))}
       </ul>
-      <div
-        style={{
-          boxShadow: "inset 0px 10px 20px rgba(0, 0, 0, 0.5)",
-        }}
-        className="flex place-items-center justify-center h-12 w-full bg-[#20CB89] mt-auto"
-      >
-        <p className="text-white text-4xl font-bold tracking-widest">-20%</p>
-      </div>
+      <Link href={`/game/${salaryGame.game_id}`}
+      className="flex place-items-center justify-center w-full mt-auto">
+        <div
+          style={{
+            boxShadow: "inset 0px 10px 20px rgba(0, 0, 0, 0.5)",
+          }}
+          className="flex place-items-center justify-center h-14 px-4 w-full bg-[#20CB89]"
+        >
+          <p className="text-white text-4xl font-bold tracking-widest">
+            -
+            {sale
+              .find((item) => item.game_id === salaryGame.game_id)
+              ?.percent_of_bargain.toString()}
+            %
+          </p>
+        </div>
+      </Link>
     </div>
   );
 };

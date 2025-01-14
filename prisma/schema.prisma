@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model games {
+  game_id      Int        @id @unique(map: "games_game_id_idx") @default(autoincrement())
+  title        String     @db.VarChar(255)
+  description  String
+  release_date DateTime   @db.Date
+  developer    String?    @db.VarChar(255)
+  publisher    String?    @db.VarChar(255)
+  price        Decimal    @db.Decimal(10, 2)
+  platform     String?    @db.VarChar(255)
+  genre        String?    @db.VarChar(255)
+  image_url    String     @db.VarChar
+  bg_image     String     @db.VarChar
+  take_a_look  Boolean
+  popularity   Int
+  library      library[]
+  salary       salary[]
+  wishlist     wishlist[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model salary {
+  id                 Int     @id @default(autoincrement())
+  game_id            Int
+  percent_of_bargain Decimal @db.Decimal(5, 2)
+  games              games   @relation(fields: [game_id], references: [game_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model library {
+  id         Int       @id @default(autoincrement())
+  user_id    String    @db.VarChar
+  game_id    Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  games      games     @relation(fields: [game_id], references: [game_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model wishlist {
+  id      Int    @id @default(autoincrement())
+  user_id String @db.VarChar
+  game_id Int
+  games   games  @relation(fields: [game_id], references: [game_id], onDelete: NoAction, onUpdate: NoAction)
+}
