@@ -1,11 +1,28 @@
 import { FC } from "react";
 import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
 
 const GamePage: FC = async () => {
+  const { userId } = await auth().catch(() => ({ userId: null }));
 
   const prisma = new PrismaClient();
-  const allGames = await prisma.games.findMany();
+  const games_in_library = userId
+    ? await prisma.library.findMany({
+        where: {
+          user_id: userId,
+        },
+      })
+    : [];
+  const allGames = await prisma.games.findMany({
+    where: {
+      NOT: {
+        game_id: {
+          in: games_in_library.map((item) => item.game_id),
+        },
+      },
+    },
+  });
 
   return (
     <div className="p-10">
@@ -17,9 +34,7 @@ const GamePage: FC = async () => {
             key={item.game_id}
             className="cursor-pointer hover:scale-110 transition-transform"
           >
-            <Link
-              href={`/game/${item.game_id}`}
-            >
+            <Link href={`/game/${item.game_id}`}>
               <div
                 style={{
                   backgroundImage: `url(${item.image_url})`,

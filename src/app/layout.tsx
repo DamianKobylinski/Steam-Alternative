@@ -4,6 +4,9 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarComponent from "@/components/Sidebar";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Sheet } from "@/components/ui/sheet";
+import CardList from "@/components/CartList";
+import { Dialog } from "@/components/ui/dialog";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,7 +30,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const darkMode = true; // or set it based on your logic
+  const darkMode = true;
 
   return (
     <ClerkProvider>
@@ -35,11 +38,18 @@ export default function RootLayout({
         <body
           className={`dark:--background  ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <SidebarProvider>
-            <SidebarComponent />
-            <SidebarTrigger className="fixed z-10" />
-            <main className="w-full dark">{children}</main>
-          </SidebarProvider>
+          <Dialog>
+            <Sheet>
+              <div className="fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
+                <CardList />
+              </div>
+              <SidebarProvider>
+                <SidebarComponent />
+                <SidebarTrigger className="fixed z-10" />
+                <main className="w-full dark">{children}</main>
+              </SidebarProvider>
+            </Sheet>
+          </Dialog>
         </body>
       </html>
     </ClerkProvider>

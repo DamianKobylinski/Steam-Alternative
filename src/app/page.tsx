@@ -37,7 +37,7 @@ const Home = async () => {
         <Popular data={popular} />
         <Salary sale={salary} data={games_for_sale} />
       </div>
-      <div className="flex flex-col w-full gap-5">
+      <div className="flex flex-col w-full mt-2">
         <Shelf name="New Games" />
         <Shelf name="Popular Games" />
       </div>

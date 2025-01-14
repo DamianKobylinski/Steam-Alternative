@@ -1,34 +1,49 @@
-'use client';
+import { auth } from "@clerk/nextjs/server";
+import { PrismaClient } from "@prisma/client";
+import Link from "next/link";
 import { FC } from "react";
-import wishlist from "@/data/wishlist.json";
-import { useUser } from "@clerk/nextjs";
 
-const GamePage: FC = () => {
-  const user = useUser();
+const GamePage: FC = async () => {
+  const { userId, redirectToSignIn } = await auth();
+
+  if (!userId) {
+    return redirectToSignIn();
+  }
+
+  const prisma = new PrismaClient();
+
+  const get_user_wishlist = await prisma.wishlist.findMany({
+    where: {
+      user_id: userId,
+    },
+  });
+
+  const wishlist = await prisma.games.findMany({
+    where: {
+      game_id: {
+        in: get_user_wishlist.map((item) => item.game_id),
+      },
+    },
+  });
+
   return (
     <div className="p-10">
       <p className="text-4xl text-white">Wishlist</p>
-      <p className="text-orange-500">In progress</p>
-      <div className="flex flex-wrap gap-5">
-        {wishlist
-          .filter((item) => item.user === user.user?.username)
-          .map((item) => {
-            return item.games.map((game, index) => (
+      <div className="flex flex-wrap gap-5 mt-5">
+        {wishlist.map((game) => (
+          <Link key={game.game_id} href={`/game/${game.game_id}`}>
+            <div className="cursor-pointer hover:scale-105 transition-transform">
               <div
-                key={index}
-                className="cursor-pointer hover:scale-105 transition-transform"
-              >
-                <div
-                  style={{
-                    backgroundImage: `url(${game.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  className="h-96 w-72 bg-indigo-50 rounded-xl"
-                ></div>
-              </div>
-            ));
-          })}
+                style={{
+                  backgroundImage: `url(${game.image_url})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                className="h-96 w-72 bg-indigo-50 rounded-xl"
+              ></div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

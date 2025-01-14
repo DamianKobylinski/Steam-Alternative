@@ -18,6 +18,7 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  UserProfile,
   useUser,
 } from "@clerk/nextjs";
 
@@ -97,7 +98,6 @@ const SidebarComponent: FC = () => {
                 />
               </UserButton.MenuItems>
             </UserButton>
-            <p>{user.user?.fullName}</p>
           </div>
         </SignedIn>
       </SidebarFooter>

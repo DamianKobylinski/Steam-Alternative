@@ -15,7 +15,7 @@ const Shelf: FC<ShelfProps> = async ({ name }) => {
   return (
     <>
       <p className="text-3xl my-4 text-white font-">{name}</p>
-      <div className="py-10 px-10 flex flex-wrap w-full justify-center lg:justify-start gap-10 overflow-hidden ">
+      <div className="mt-4 flex flex-wrap w-full justify-center lg:justify-start gap-10 overflow-hidden py-4">
         {allGames.slice(0, 5)
           .map((item) => (
             <div

@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import { Game } from "@/interfaces/game";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface SalaryProps {
   sale: {
@@ -14,6 +15,19 @@ interface SalaryProps {
 
 const Salary: FC<SalaryProps> = ({ sale, data }) => {
   const [salaryGame, setSalaryGame] = useState(data[0]);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSalaryGame((prevGame) => {
+        const currentIndex = data.findIndex((game) => game.game_id === prevGame.game_id);
+        const nextIndex = (currentIndex + 1) % data.length;
+        return data[nextIndex];
+      });
+    }, 17000);
+
+    return () => clearInterval(interval);
+  }, [data]);
 
   return (
     <div
@@ -33,7 +47,7 @@ const Salary: FC<SalaryProps> = ({ sale, data }) => {
             }}
             className={`min-w-4 min-h-4 ${
               game.game_id === salaryGame.game_id ? "bg-[#3A506B]" : "bg-white"
-            }  mr-2 rounded-full cursor-pointer transition-colors`}
+            }  mr-2 rounded-full cursor-pointer transition-colors duration-700`}
             onClick={() => {
               const foundGame = data.find(
                 (item) => item.game_id === game.game_id
