@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { Calendar, Home, ShoppingBag, Star } from "lucide-react";
+import { Calendar, Heart, Home, ShoppingBag } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +18,6 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  UserProfile,
   useUser,
 } from "@clerk/nextjs";
 
@@ -41,7 +40,7 @@ const items = [
   {
     title: "Wishlist",
     url: "/wishlist",
-    icon: Star,
+    icon: Heart,
   },
 ];
 

@@ -39,8 +39,8 @@ const WishlistButton = ({
     <>
       <Button
         className={`flex h-full justify-center items-center ${
-          check_if_in_wishlist ? "bg-red-700" : "bg-gray-200"
-        } p-[25px] bg-opacity-50 rounded-xl cursor-pointer transition-transform animate-in duration-300`}
+          check_if_in_wishlist ? "bg-[#00ddff]" : "bg-[#1b8eed]"
+        } p-[25px] bg-opacity-50 rounded-xl cursor-pointer transition-transform animate-in duration-300 text-white hover:bg-[#ccf8ff] hover:text-black`}
         onClick={() => {
           if (check_if_in_wishlist) {
             handleWishlistChange("remove");

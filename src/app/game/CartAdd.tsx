@@ -65,7 +65,7 @@ const CartAdd: FC<CartAddProps> = ({
       ) : (
         <>
           <button
-            className="text-xl bg-red-500 rounded-xl px-14 py-2 font-extrabold"
+            className="text-xl bg-[#2a7e1c] rounded-xl px-14 py-2 font-extrabold"
             onClick={() => {
               if (check_if_in_salary) {
                 setCartItem((prev: Game[]) => {
@@ -87,7 +87,7 @@ const CartAdd: FC<CartAddProps> = ({
             Buy game
             <p
               className={`text-3xl ${
-                check_if_in_salary ? `text-green-400` : `text-white-500`
+                check_if_in_salary ? `text-[#f8d818]` : `text-white-500`
               } `}
             >
               {gamePrice.toFixed(2)} $
