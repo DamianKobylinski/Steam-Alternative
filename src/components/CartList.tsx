@@ -47,7 +47,7 @@ const CardList = () => {
           <SheetDescription>
             {cartItem.length > 0 ? (
               <p className="text-xl">
-                Twój koszyk: <span className="text-white">{priceView} $</span>
+                Twój koszyk: <span className="text-white">{priceView.toFixed(2)} $</span>
               </p>
             ) : (
               <p>Twój koszyk jest pusty</p>
