@@ -1,3 +1,5 @@
+"use server";
+
 import { Badge } from "@/components/ui/badge";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";

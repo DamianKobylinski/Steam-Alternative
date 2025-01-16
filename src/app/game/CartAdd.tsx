@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Game } from "@/interfaces/game";
@@ -5,6 +6,7 @@ import { Heart, HeartOff } from "lucide-react";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
+import WishlistButton from "./WishlistButton";
 
 interface CartAddProps {
   check_if_in_library: {
@@ -91,15 +93,10 @@ const CartAdd: FC<CartAddProps> = ({
               {gamePrice.toFixed(2)} $
             </p>
           </button>
-          {check_if_in_wishlist ? (
-            <div className="flex justify-center items-center bg-red-700 p-[25px] bg-opacity-50 rounded-xl cursor-pointer transition-transform animate-in duration-300">
-              <Heart className="z-20 " height="25px" width="25px" />
-            </div>
-          ) : (
-            <div className="flex justify-center items-center bg-[#C4C4C4] p-[25px] bg-opacity-50 rounded-xl cursor-pointer transition-transform animate-out duration-300">
-              <HeartOff className="z-20 " height="25px" width="25px" />
-            </div>
-          )}
+          <WishlistButton
+            check_if_in_wishlist={check_if_in_wishlist}
+            game={{ ...game, price: Number(game.price) }}
+          />
         </>
       )}
     </>

@@ -38,16 +38,8 @@ const CardList = () => {
 
   return (
     <>
-      <SheetTrigger className="flex items-center gap-4">
-        <p className="flex justify-center items-center min-h-full text-xl">
-          {priceView ? priceView.toFixed(2) : 0} $
-        </p>
-        <Button
-          variant="outline"
-          className="flex justify-center items-center min-h-full"
-        >
+      <SheetTrigger asChild className="flex items-center gap-4">
           <ShoppingCart />
-        </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -96,7 +88,7 @@ const CardList = () => {
           {cartItem.length > 0 && (
             <>
               <Dialog>
-                <DialogTrigger>Zapłać</DialogTrigger>
+                <DialogTrigger asChild>Zapłać</DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Twój koszyk</DialogTitle>
