@@ -27,7 +27,6 @@ const GamePage: FC = async () => {
   return (
     <div className="p-10">
       <p className="text-4xl text-white">Shop</p>
-      <p className="text-orange-500">In progress</p>
       <div className="flex flex-wrap gap-10 my-4">
         {allGames.map((item) => (
           <div
