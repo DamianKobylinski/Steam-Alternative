@@ -18,6 +18,7 @@ interface CartAddProps {
     id: number;
     game_id: string;
     percent_of_bargain: number;
+    discount_code: string;
   } | null;
   check_if_in_wishlist: {
     id: number;
@@ -35,6 +36,7 @@ const CartAdd: FC<CartAddProps> = ({
 }) => {
   const [priceView, setPriceView] = useLocalStorage<number>("priceView", 0);
   const [cartItem, setCartItem] = useLocalStorage<Game[]>("cartItem", []);
+  const [discounts, setDiscounts] = useLocalStorage<{ game_id: number; discount: string }[]>("discounts", []);
   const [gamePrice, setGamePrice] = useState<number>(0);
 
   useEffect(() => {
@@ -67,21 +69,40 @@ const CartAdd: FC<CartAddProps> = ({
           <button
             className="text-xl bg-[#2a7e1c] rounded-xl px-14 py-2 font-extrabold"
             onClick={() => {
-              if (check_if_in_salary) {
-                setCartItem((prev: Game[]) => {
+              setCartItem((prev) => {
+                if (prev.some((item) => item.game_id === game.game_id)) {
+                  return prev;
+                } else {
+                  setPriceView((prev) => {
+                    return prev + (Number(gamePrice.toFixed(2)) ?? 0);
+                  });
                   return [
                     ...prev,
-                    { ...game, price: Number(gamePrice.toFixed(2)) },
+                    {
+                      ...game,
+                      price: Number(gamePrice.toFixed(2)),
+                    },
                   ];
-                });
-              } else {
-                setCartItem((prev: Game[]) => {
-                  return [...prev, game];
+                }
+              });
+
+              if (check_if_in_salary) {
+                setDiscounts((prev) => {
+                  if (
+                    prev.some((item) => item.game_id === game.game_id && item.discount === check_if_in_salary.discount_code)
+                  ) {
+                    return prev;
+                  } else {
+                    return [
+                      ...prev,
+                      {
+                        game_id: game.game_id,
+                        discount: check_if_in_salary.discount_code,
+                      },
+                    ];
+                  }
                 });
               }
-              setPriceView((prev) => {
-                return prev + (Number(gamePrice.toFixed(2)) ?? 0);
-              });
             }}
           >
             Buy game

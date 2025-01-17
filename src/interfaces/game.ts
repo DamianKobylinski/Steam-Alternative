@@ -1,4 +1,5 @@
 export interface Game {
+  prod_id: string;
   game_id: number;
   title: string;
   description: string | null;

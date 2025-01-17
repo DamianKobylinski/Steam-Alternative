@@ -8,7 +8,8 @@ export async function POST(req: NextRequest) {
 
     console.log(email, subject, message);
 
-    await prisma.contact.create({
+    await prisma.contact
+      .create({
         data: {
           email: email,
           subject: subject,
