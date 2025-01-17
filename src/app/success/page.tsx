@@ -3,46 +3,46 @@
 
 import { Button } from "@/components/ui/button";
 import { Game } from "@/interfaces/game";
-import { useUser } from "@clerk/nextjs";
 import { Check } from "lucide-react";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 const Success = () => {
-  const user_information = useUser();
   const [priceView, setPriceView] = useLocalStorage<number>("priceView", 0);
   const [cartItem, setCartItem] = useLocalStorage<Game[]>("cartItem", []);
   const [discounts, setDiscounts] = useLocalStorage<
     { game_id: number; discount: string }[]
   >("discounts", []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("/api/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartItem: cartItem,
+        }),
+      });
 
-  if (user_information && user_information.user === null) {
-    redirect("/");
-  }
+      const data = await response.json();
+      if (data.message === "Success") {
+        console.log(data);
+        setPriceView(0);
+        setCartItem([]);
+        setDiscounts([]);
+      }else{
+        redirect("/");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleStoring = async () => {
-    if (user_information.user && user_information.user.id !== undefined) {
-      const response = async () => {
-        await fetch("/api/store", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user_information.user.id,
-            cartItem: cartItem,
-          }),
-        });
-      };
-
-      const data = response();
-      console.log(data);
-      setPriceView(0);
-      setCartItem([]);
-      setDiscounts([]);
-      redirect("/");
-    }
+    redirect("/");
   };
 
   return (
