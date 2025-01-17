@@ -65,7 +65,7 @@ const Salary: FC<SalaryProps> = ({ sale, data }) => {
           style={{
             boxShadow: "inset 0px 10px 20px rgba(0, 0, 0, 0.5)",
           }}
-          className="flex place-items-center justify-center h-14 px-4 w-full bg-[#20CB89]"
+          className="flex place-items-center justify-center h-14 px-4 w-full bg-[#2a7e1c]"
         >
           <p className="text-white text-4xl font-bold tracking-widest">
             -

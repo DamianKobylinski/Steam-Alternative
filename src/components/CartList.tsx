@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -14,19 +13,18 @@ import { ShoppingCart } from "lucide-react";
 import { useLocalStorage } from "usehooks-ts";
 import { Game } from "@/interfaces/game";
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 const CardList = () => {
   const [priceView, setPriceView] = useLocalStorage<number>("priceView", 0);
   const [triggerPayment, setTriggerPayment] = useState<boolean>(false);
   const [cartItem, setCartItem] = useLocalStorage<Game[]>("cartItem", []);
+  const [discounts, setDiscounts] = useLocalStorage<{ game_id: number; discount: string }[]>("discounts", []);
 
   useEffect(() => {
     if (priceView <= 0) setPriceView(0);
@@ -36,18 +34,30 @@ const CardList = () => {
     setTriggerPayment(false);
   }, [triggerPayment]);
 
+  const handlePayment = async () => {
+    const arrayProductId = cartItem.map((item) => item.prod_id);
+    const stripe = await stripePromise;
+    const response = await fetch("/api/payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        arrayProductId,
+        discounts,
+      }),
+    });
+    const session = await response.json();
+    console.log(session);
+    await stripe?.redirectToCheckout({
+      sessionId: session.id,
+    });
+  };
+
   return (
     <>
-      <SheetTrigger className="flex items-center gap-4">
-        <p className="flex justify-center items-center min-h-full text-xl">
-          {priceView ? priceView.toFixed(2) : 0} $
-        </p>
-        <Button
-          variant="outline"
-          className="flex justify-center items-center min-h-full"
-        >
-          <ShoppingCart />
-        </Button>
+      <SheetTrigger asChild className="flex items-center gap-4">
+        <ShoppingCart />
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -55,7 +65,8 @@ const CardList = () => {
           <SheetDescription>
             {cartItem.length > 0 ? (
               <p className="text-xl">
-                Twój koszyk: <span className="text-white">{priceView} $</span>
+                Twój koszyk:{" "}
+                <span className="text-white">{priceView.toFixed(2)} $</span>
               </p>
             ) : (
               <p>Twój koszyk jest pusty</p>
@@ -85,6 +96,9 @@ const CardList = () => {
                   setPriceView((prev) => {
                     return prev - (Number(item.price) ?? 0);
                   });
+                  setDiscounts((prev) => {
+                    return prev.filter((discount) => discount.game_id !== item.game_id);
+                  });
                 }}
               >
                 Usuń
@@ -94,19 +108,9 @@ const CardList = () => {
         </div>
         <SheetFooter className="flex place-items-center gap-5">
           {cartItem.length > 0 && (
-            <>
-              <Dialog>
-                <DialogTrigger>Zapłać</DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Twój koszyk</DialogTitle>
-                    <DialogDescription>
-                      Dokonaj zakupu za {priceView} $
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            </>
+            <Button variant={"default"} onClick={handlePayment}>
+              Zapłać
+            </Button>
           )}
         </SheetFooter>
       </SheetContent>

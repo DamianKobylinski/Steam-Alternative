@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarComponent from "@/components/Sidebar";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Sheet } from "@/components/ui/sheet";
 import CardList from "@/components/CartList";
 import { Dialog } from "@/components/ui/dialog";
@@ -40,7 +40,17 @@ export default function RootLayout({
         >
           <Dialog>
             <Sheet>
-              <div className="fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
+              <div className="flex gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
+                <div>
+                  <SignedOut>
+                    <SignInButton />
+                  </SignedOut>
+                  <SignedIn>
+                    <div className="flex gap-5 place-items-center">
+                      <UserButton />
+                    </div>
+                  </SignedIn>
+                </div>
                 <CardList />
               </div>
               <SidebarProvider>

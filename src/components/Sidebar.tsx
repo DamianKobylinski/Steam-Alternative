@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { Calendar, Home, ShoppingBag, Star } from "lucide-react";
+import { Calendar, Heart, Home, ShoppingBag } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +18,6 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  UserProfile,
   useUser,
 } from "@clerk/nextjs";
 
@@ -41,7 +40,7 @@ const items = [
   {
     title: "Wishlist",
     url: "/wishlist",
-    icon: Star,
+    icon: Heart,
   },
 ];
 
@@ -57,49 +56,39 @@ const SidebarComponent: FC = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="flex gap-5">
-                {items
+              {items
                 .filter((item) => {
                   if (user.user?.id) {
-                  return true;
+                    return true;
                   }
                   return item.title === "Home" || item.title === "Shop";
                 })
                 .map((item) => (
                   <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link className="p-5" href={item.url}>
-                    <item.icon
-                      style={{
-                      width: "25px",
-                      height: "25px",
-                      }}
-                    />
-                    <span className="text-2xl">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                    <SidebarMenuButton asChild>
+                      <Link className="p-5" href={item.url}>
+                        <item.icon
+                          style={{
+                            width: "25px",
+                            height: "25px",
+                          }}
+                        />
+                        <span className="text-2xl">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="px-5 py-10">
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <div className="flex gap-5 place-items-center">
-            <UserButton>
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="Open chat"
-                  labelIcon={<span>💬</span>}
-                  onClick={() => alert("init chat")}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
-          </div>
-        </SignedIn>
+      <SidebarFooter className="flex place-items-center px-5 py-10">
+        <Link
+          href="/contact"
+          className="text-xl bg-[#0a0a0a] bg-opacity-90 rounded-xl text-center w-3/4 py-2 shadow-lg transition-transform hover:scale-105"
+        >
+          Contact
+        </Link>
       </SidebarFooter>
     </Sidebar>
   );

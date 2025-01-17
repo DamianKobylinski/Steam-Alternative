@@ -1,3 +1,5 @@
+"use server";
+
 import { Badge } from "@/components/ui/badge";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
@@ -63,7 +65,7 @@ export default async function Game({
             ? "/wishlist"
             : "/shop"
         }
-        className="flex gap-5 text-orange-500 text-2xl py-5 hover:translate-x-2 transition-transform"
+        className="flex gap-5 text-[#2292ee] text-2xl py-5 hover:translate-x-2 transition-transform"
       >
         <MoveLeft size={32} />
         {referer == "http://" + hostname + "/" ? (
@@ -103,7 +105,7 @@ export default async function Game({
             </div>
           </div>
           <div className="flex gap-5">
-            <Badge variant={"secondary"}>{game?.genre}</Badge>
+            <Badge variant={"default"}>{game?.genre}</Badge>
             <Badge variant={"default"}>{game?.platform}</Badge>
           </div>
           <div className="flex gap-5 mt-5">

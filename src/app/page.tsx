@@ -5,25 +5,29 @@ import { PrismaClient } from "@prisma/client";
 
 const Home = async () => {
   const prisma = new PrismaClient();
-  const popular = (await prisma.games.findMany({
-    where: {
-      take_a_look: true,
-    },
-  })).map(game => ({
+  const popular = (
+    await prisma.games.findMany({
+      where: {
+        take_a_look: true,
+      },
+    })
+  ).map((game) => ({
     ...game,
     price: Number(game.price),
   }));
-  const salary = (await prisma.salary.findMany()).map(item => ({
+  const salary = (await prisma.salary.findMany()).map((item) => ({
     ...item,
     percent_of_bargain: Number(item.percent_of_bargain),
   }));
-  const games_for_sale = (await prisma.games.findMany({
-    where: {
-      game_id: {
-        in: salary.map((item) => item.game_id),
+  const games_for_sale = (
+    await prisma.games.findMany({
+      where: {
+        game_id: {
+          in: salary.map((item) => item.game_id),
+        },
       },
-    },
-  })).map(game => ({
+    })
+  ).map((game) => ({
     ...game,
     price: Number(game.price),
   }));
@@ -31,7 +35,6 @@ const Home = async () => {
   return (
     <div className="p-10">
       <p className="text-6xl my-4 text-white">Home</p>
-      <p className="text-orange-500">In progress</p>
       <p className="text-3xl my-4 text-white">Take a look</p>
       <div className="flex flex-col place-items-center lg:flex-row gap-5">
         <Popular data={popular} />

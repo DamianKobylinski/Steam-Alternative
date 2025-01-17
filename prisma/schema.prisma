@@ -21,6 +21,7 @@ model games {
   bg_image     String     @db.VarChar
   take_a_look  Boolean
   popularity   Int
+  prod_id      String     @db.VarChar
   library      library[]
   salary       salary[]
   wishlist     wishlist[]
@@ -28,10 +29,11 @@ model games {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model salary {
-  id                 Int     @id @default(autoincrement())
+  id                 Int    @id @default(autoincrement())
   game_id            Int
-  percent_of_bargain Decimal @db.Decimal(5, 2)
-  games              games   @relation(fields: [game_id], references: [game_id], onDelete: NoAction, onUpdate: NoAction)
+  percent_of_bargain Int
+  discount_code      String @db.VarChar
+  games              games  @relation(fields: [game_id], references: [game_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model library {
@@ -47,4 +49,12 @@ model wishlist {
   user_id String @db.VarChar
   game_id Int
   games   games  @relation(fields: [game_id], references: [game_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model contact {
+  id         Int       @id @default(autoincrement())
+  email      String    @db.VarChar(255)
+  subject    String    @db.VarChar(255)
+  message    String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
 }
