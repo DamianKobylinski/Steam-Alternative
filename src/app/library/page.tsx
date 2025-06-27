@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
-const GamePage: FC = async () => {
+const Library: FC = async () => {
   const { userId, redirectToSignIn } = await auth();
 
   if (!userId) {
@@ -47,4 +47,4 @@ const GamePage: FC = async () => {
   );
 };
 
-export default GamePage;
+export default Library;

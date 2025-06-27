@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
           game_id: item.game_id,
         })),
       });
-
+        
       await prisma.wishlist.deleteMany({
         where: {
           user_id: userId,

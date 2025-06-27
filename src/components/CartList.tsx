@@ -61,15 +61,17 @@ const CardList = () => {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Koszyk</SheetTitle>
+          <SheetTitle>Cart</SheetTitle>
           <SheetDescription>
             {cartItem.length > 0 ? (
               <p className="text-xl">
-                Twój koszyk:{" "}
+                Your cart total is {" "}
                 <span className="text-white">{priceView.toFixed(2)} $</span>
               </p>
             ) : (
-              <p>Twój koszyk jest pusty</p>
+              <p>
+                Your cart is empty. Add some games to your cart!
+              </p>
             )}
           </SheetDescription>
         </SheetHeader>
@@ -101,7 +103,7 @@ const CardList = () => {
                   });
                 }}
               >
-                Usuń
+                Delete
               </Button>
             </div>
           ))}
@@ -109,7 +111,7 @@ const CardList = () => {
         <SheetFooter className="flex place-items-center gap-5">
           {cartItem.length > 0 && (
             <Button variant={"default"} onClick={handlePayment}>
-              Zapłać
+              Pay!
             </Button>
           )}
         </SheetFooter>

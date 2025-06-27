@@ -69,13 +69,13 @@ export default async function Game({
       >
         <MoveLeft size={32} />
         {referer == "http://" + hostname + "/" ? (
-          <>Powrót na stronę główną</>
+          <>Return to Home</>
         ) : referer == "http://" + hostname + "/library" ? (
-          <>Powrót do biblioteki</>
+          <>Return to Library</>
         ) : referer == "http://" + hostname + "/wishlist" ? (
-          <>Powrót do listy życzeń</>
+          <>Return to Wishlist</>
         ) : (
-          <>Powrót do sklepu</>
+          <>Return to Shop</>
         )}
       </Link>
       <div
@@ -122,7 +122,7 @@ export default async function Game({
             <SignedOut>
               <SignInButton>
                 <button className="text-2xl bg-red-500 rounded-xl px-14 py-4">
-                  Sign in to buy game
+                  Sign in to buy!
                 </button>
               </SignInButton>
             </SignedOut>
