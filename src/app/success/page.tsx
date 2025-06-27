@@ -28,8 +28,7 @@ const Success = () => {
       });
 
       const data = await response.json();
-      if (data.message === "Success") {
-        console.log(data);
+      if (data.message === "Success") { 
         setPriceView(0);
         setCartItem([]);
         setDiscounts([]);
@@ -49,10 +48,14 @@ const Success = () => {
     <div className="flex flex-col h-screen place-content-center items-center">
       <div className="flex flex-col place-items-center gap-5">
         <Check className="text-green-500" size={64} />
-        <h1>Payment Completed</h1>
-        <p>Thank you for your purchase!</p>
+        <h1>
+          Payment successful!
+        </h1>
+        <p>
+          Thank you for your purchase! Your game is now available in your library.  
+        </p>
         <Button variant={"default"} onClick={handleStoring}>
-          Wróć do strony głównej
+          Return to Home
         </Button>
       </div>
     </div>

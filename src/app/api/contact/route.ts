@@ -6,22 +6,25 @@ export async function POST(req: NextRequest) {
     const prisma = new PrismaClient();
     const { email, subject, message } = await req.json();
 
+    // Basic validation
+    if (typeof email !== 'string' || typeof subject !== 'string' || typeof message !== 'string') {
+      return NextResponse.json({ message: "Invalid input data" }, { status: 400 });
+    }
+
     console.log(email, subject, message);
 
-    await prisma.contact
-      .create({
-        data: {
-          email: email,
-          subject: subject,
-          message: message,
-        },
-      })
-      .then((data) => {
-        console.log(data);
-      });
+    const data = await prisma.contact.create({
+      data: {
+        email: email,
+        subject: subject,
+        message: message,
+      },
+    });
+
+    console.log(data);
 
     return NextResponse.json({ data: { email, subject, message } });
   } catch (error) {
-    return NextResponse.json({ message: error });
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 }

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
 import { FC } from "react";
 
-const GamePage: FC = async () => {
+const Wishlist: FC = async () => {
   const { userId, redirectToSignIn } = await auth();
 
   if (!userId) {
@@ -49,4 +49,4 @@ const GamePage: FC = async () => {
   );
 };
 
-export default GamePage;
+export default Wishlist;

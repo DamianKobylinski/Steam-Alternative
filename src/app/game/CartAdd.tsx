@@ -62,7 +62,9 @@ const CartAdd: FC<CartAddProps> = ({
           href={"/library"}
           className="text-xl bg-orange-500 rounded-xl px-14 py-2 font-extrabold"
         >
-          <p className="mt-auto">Przejdź do biblioteki</p>
+          <p className="mt-auto">
+            Already in library!  
+          </p>
         </Link>
       ) : (
         <>
@@ -105,7 +107,7 @@ const CartAdd: FC<CartAddProps> = ({
               }
             }}
           >
-            Buy game
+            Buy game!
             <p
               className={`text-3xl ${
                 check_if_in_salary ? `text-[#f8d818]` : `text-white-500`

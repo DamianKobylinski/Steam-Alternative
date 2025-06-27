@@ -55,7 +55,7 @@ const Popular: FC<PopularProps> = ({ data }) => {
             href={`/game/${popularGame?.game_id}`}
             className="text-xl bg-[#2292ee] rounded-xl px-14 py-2 font-extrabold"
           >
-            <p className="mt-auto text-center">Sprawdź!</p>
+            <p className="mt-auto text-center">Checkout!</p>
           </Link>
         </div>
       </div>
