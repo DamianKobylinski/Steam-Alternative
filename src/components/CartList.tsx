@@ -74,12 +74,12 @@ const CardList = () => {
           <SheetTitle>Cart</SheetTitle>
           <SheetDescription>
             {cartItem.length > 0 ? (
-              <p className="text-xl">
+              <>
                 Your cart total is{" "}
                 <span className="text-white">{priceView.toFixed(2)} $</span>
-              </p>
+              </>
             ) : (
-              <p>Your cart is empty. Add some games to your cart!</p>
+              <>Your cart is empty. Add some games to your cart!</>
             )}
           </SheetDescription>
         </SheetHeader>

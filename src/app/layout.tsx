@@ -68,8 +68,8 @@ export default function RootLayout({
                 </div>
                 <SidebarProvider>
                   <SidebarComponent />
-                  <SidebarTrigger className="fixed z-10" />
-                  <main className="flex w-full justify-center dark">{children}</main>
+                  <SidebarTrigger className="fixed z-10 cursor-pointer" />
+                  <main className="flex w-3/5 mx-auto dark">{children}</main>
                 </SidebarProvider>
               </Sheet>
             </Dialog>
