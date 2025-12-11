@@ -1,6 +1,6 @@
 import { Game } from "@/interfaces/game";
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -10,7 +10,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "User not authenticated" });
     } else {
       const { cartItem } = await req.json();
-      const prisma = new PrismaClient();
 
       await prisma.library.createMany({
         data: cartItem.map((item: Game) => ({

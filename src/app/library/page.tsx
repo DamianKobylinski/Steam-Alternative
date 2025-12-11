@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 
 const Library: FC = async () => {
@@ -9,7 +9,6 @@ const Library: FC = async () => {
   if (!userId) {
     return redirectToSignIn();
   }
-  const prisma = new PrismaClient();
   const library = await prisma.library.findMany({
     where: {
       user_id: userId,

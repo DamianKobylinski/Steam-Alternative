@@ -1,12 +1,11 @@
 import { FC } from "react";
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
 const GamePage: FC = async () => {
   const { userId } = await auth().catch(() => ({ userId: null }));
 
-  const prisma = new PrismaClient();
   const games_in_library = userId
     ? await prisma.library.findMany({
         where: {

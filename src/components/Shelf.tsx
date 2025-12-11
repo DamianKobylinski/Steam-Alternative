@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { FC } from "react";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 interface ShelfProps {
   name: string;
 }
 
 const Shelf: FC<ShelfProps> = async ({ name }) => {
-  const prisma = new PrismaClient();
   const allGames = await prisma.games.findMany({
     orderBy:
       name == "New Games" ? { release_date: "desc" } : { popularity: "desc" },

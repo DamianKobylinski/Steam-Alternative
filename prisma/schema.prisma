@@ -1,10 +1,11 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  engineType      = "client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model games {
@@ -27,7 +28,6 @@ model games {
   wishlist     wishlist[]
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model salary {
   id                 Int    @id @default(autoincrement())
   game_id            Int

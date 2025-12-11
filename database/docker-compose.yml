@@ -1,0 +1,46 @@
+services:
+  postgres_service:
+    image: postgres:18               
+    container_name: steam-alternative-database
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    networks:
+      - steam-alternative-network
+    volumes:
+      - pg-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin_service:
+    image: dpage/pgadmin4:latest
+    container_name: steam-alternative-pgadmin
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "15432:80"
+    depends_on:
+      postgres_service:
+        condition: service_healthy
+    networks:
+      - steam-alternative-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    command: >
+      sh -c "mkdir -p /var/lib/pgadmin/sessions &&
+             chown pgadmin:pgadmin /var/lib/pgadmin/sessions &&
+             exec /entrypoint.sh"
+volumes:
+  pg-data:
+  pgadmin-data:
+  pgadmin-sessions:
+
+networks:
+  steam-alternative-network:
+    driver: bridge

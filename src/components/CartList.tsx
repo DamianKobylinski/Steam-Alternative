@@ -17,14 +17,16 @@ import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
 const CardList = () => {
   const [priceView, setPriceView] = useLocalStorage<number>("priceView", 0);
   const [triggerPayment, setTriggerPayment] = useState<boolean>(false);
   const [cartItem, setCartItem] = useLocalStorage<Game[]>("cartItem", []);
-  const [discounts, setDiscounts] = useLocalStorage<{ game_id: number; discount: string }[]>("discounts", []);
+  const [discounts, setDiscounts] = useLocalStorage<
+    { game_id: number; discount: string }[]
+  >("discounts", []);
 
   useEffect(() => {
     if (priceView <= 0) setPriceView(0);
@@ -35,23 +37,31 @@ const CardList = () => {
   }, [triggerPayment]);
 
   const handlePayment = async () => {
+    if (cartItem.length === 0) return;
+
     const arrayProductId = cartItem.map((item) => item.prod_id);
+
     const stripe = await stripePromise;
+    if (!stripe) {
+      alert("Stripe failed to load");
+      return;
+    }
+
     const response = await fetch("/api/payment", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        arrayProductId,
-        discounts,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ arrayProductId, discounts }),
     });
+
     const session = await response.json();
-    console.log(session);
-    await stripe?.redirectToCheckout({
-      sessionId: session.id,
-    });
+
+    console.log("Checkout Session:", session);
+
+    if (session.url) {
+      window.location.href = session.url;
+    } else {
+      console.error("No Checkout URL found");
+    }
   };
 
   return (
@@ -65,13 +75,11 @@ const CardList = () => {
           <SheetDescription>
             {cartItem.length > 0 ? (
               <p className="text-xl">
-                Your cart total is {" "}
+                Your cart total is{" "}
                 <span className="text-white">{priceView.toFixed(2)} $</span>
               </p>
             ) : (
-              <p>
-                Your cart is empty. Add some games to your cart!
-              </p>
+              <p>Your cart is empty. Add some games to your cart!</p>
             )}
           </SheetDescription>
         </SheetHeader>
@@ -99,7 +107,9 @@ const CardList = () => {
                     return prev - (Number(item.price) ?? 0);
                   });
                   setDiscounts((prev) => {
-                    return prev.filter((discount) => discount.game_id !== item.game_id);
+                    return prev.filter(
+                      (discount) => discount.game_id !== item.game_id
+                    );
                   });
                 }}
               >

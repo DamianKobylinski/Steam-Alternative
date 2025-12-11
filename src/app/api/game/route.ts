@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const prisma = new PrismaClient();
     const { action, game, user } = await req.json();
 
     if (action == "add") {

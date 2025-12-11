@@ -1,10 +1,9 @@
 import Popular from "@/components/homepage/Popular";
 import Salary from "@/components/homepage/Salary";
 import Shelf from "@/components/Shelf";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma"; 
 
 const Home = async () => {
-  const prisma = new PrismaClient();
   const popular = (
     await prisma.games.findMany({
       where: {
