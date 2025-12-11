@@ -48,7 +48,7 @@ const SidebarComponent: FC = () => {
   const user = useUser();
 
   return (
-    <Sidebar className="fixed">
+    <Sidebar className="fixed" collapsible="offcanvas">
       <SidebarHeader>
         <p className="text-3xl p-5 text-center mt-12">Steam Alternative</p>
       </SidebarHeader>

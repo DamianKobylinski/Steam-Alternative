@@ -21,10 +21,46 @@ import {
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = "16rem"
-const SIDEBAR_WIDTH_MOBILE = "18rem"
+const SIDEBAR_WIDTH = "20rem"
+const SIDEBAR_WIDTH_MOBILE = "20rem"
 const SIDEBAR_WIDTH_ICON = "4rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
+
+function readSidebarStateFromCookie(): boolean | undefined {
+  if (typeof document === "undefined") {
+    return undefined
+  }
+
+  try {
+    const cookie = document.cookie
+      .split("; ")
+      .find((entry) => entry.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
+
+    if (!cookie) {
+      return undefined
+    }
+
+    const [, rawValue] = cookie.split("=")
+    if (rawValue === "true") {
+      return true
+    }
+    if (rawValue === "false") {
+      return false
+    }
+  } catch (_error) {
+    // Swallow errors caused by malformed cookies.
+  }
+
+  return undefined
+}
+
+function persistSidebarState(value: boolean): void {
+  if (typeof document === "undefined") {
+    return
+  }
+
+  document.cookie = `${SIDEBAR_COOKIE_NAME}=${value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+}
 
 type SidebarContext = {
   state: "expanded" | "collapsed"
@@ -83,11 +119,22 @@ const SidebarProvider = React.forwardRef<
           _setOpen(openState)
         }
 
-        // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+        // This persists the cookie to keep the sidebar state.
+        persistSidebarState(openState)
       },
       [setOpenProp, open]
     )
+
+    React.useEffect(() => {
+      if (openProp !== undefined) {
+        return
+      }
+
+      const storedState = readSidebarStateFromCookie()
+      if (typeof storedState === "boolean") {
+        _setOpen(storedState)
+      }
+    }, [openProp, _setOpen])
 
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
