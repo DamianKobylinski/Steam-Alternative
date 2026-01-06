@@ -170,4 +170,4 @@ next-env.d.ts
 .vscode/settings.json
 .vscode/*.json
 .vscode/**/settings.json
-.vscode/**/tasks.json
+.vscode/**/tasks.jsondatabase/data/

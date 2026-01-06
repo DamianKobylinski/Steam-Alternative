@@ -14,6 +14,7 @@ import { Sheet } from "@/components/ui/sheet";
 import CardList from "@/components/CartList";
 import { Dialog } from "@/components/ui/dialog";
 import { ThemeProvider } from "next-themes";
+import LoginTracker from "@/components/LoginTracker";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -61,6 +62,7 @@ export default function RootLayout({
                     <SignedIn>
                       <div className="flex gap-5 place-items-center">
                         <UserButton />
+                        <LoginTracker />
                       </div>
                     </SignedIn>
                   </div>

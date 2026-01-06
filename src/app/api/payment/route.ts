@@ -1,11 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import {
+  httpRequestsTotal,
+  httpRequestDuration,
+  paymentSessionsTotal,
+} from "@/lib/metrics";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-11-17.clover", // Use the required Stripe API version
-});
+// Lazy-initialize Stripe to avoid build-time errors
+let stripe: Stripe | null = null;
+function getStripe() {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: "2025-11-17.clover",
+    });
+  }
+  return stripe;
+}
+
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+  const route = "/api/payment";
+  
   try {
     const { arrayProductId, discounts } = await req.json();
 
@@ -13,12 +30,17 @@ export async function POST(req: NextRequest) {
     console.log("Received discounts:", discounts);
 
     if (!arrayProductId || !Array.isArray(arrayProductId) || arrayProductId.length === 0) {
+      httpRequestsTotal.inc({ method: "POST", route, status_code: "400" });
+      httpRequestDuration.observe(
+        { method: "POST", route, status_code: "400" },
+        (Date.now() - startTime) / 1000
+      );
       return NextResponse.json({ error: "No products provided" }, { status: 400 });
     }
 
     // Fetch active prices for all products
     const pricePromises = arrayProductId.map((productId: string) =>
-      stripe.prices.list({
+      getStripe().prices.list({
         product: productId,
         active: true,
         limit: 100, // in case there are many
@@ -56,7 +78,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       line_items: lineItems,
@@ -68,9 +90,21 @@ export async function POST(req: NextRequest) {
     // This is the key check!
     if (!session.url) {
       console.error("Stripe session created but has no URL:", session);
+      paymentSessionsTotal.inc({ status: "failed" });
+      httpRequestsTotal.inc({ method: "POST", route, status_code: "500" });
+      httpRequestDuration.observe(
+        { method: "POST", route, status_code: "500" },
+        (Date.now() - startTime) / 1000
+      );
       return NextResponse.json({ error: "Failed to generate checkout URL" }, { status: 500 });
     }
 
+    paymentSessionsTotal.inc({ status: "success" });
+    httpRequestsTotal.inc({ method: "POST", route, status_code: "200" });
+    httpRequestDuration.observe(
+      { method: "POST", route, status_code: "200" },
+      (Date.now() - startTime) / 1000
+    );
     return NextResponse.json({ 
       id: session.id, 
       url: session.url 
@@ -83,6 +117,12 @@ export async function POST(req: NextRequest) {
     const errorMessage = error?.message || "Unknown error";
     const errorCode = error?.code || "unknown";
 
+    paymentSessionsTotal.inc({ status: "error" });
+    httpRequestsTotal.inc({ method: "POST", route, status_code: "500" });
+    httpRequestDuration.observe(
+      { method: "POST", route, status_code: "500" },
+      (Date.now() - startTime) / 1000
+    );
     return NextResponse.json(
       { 
         error: "Failed to create checkout session",

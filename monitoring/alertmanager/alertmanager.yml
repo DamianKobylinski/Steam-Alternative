@@ -1,0 +1,48 @@
+global:
+  # SMTP server configuration for sending emails
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'damiankob12@gmail.com'
+  smtp_auth_username: 'damiankob12@gmail.com'
+  smtp_auth_password: 'iipjcbvpecwsuobh'
+  smtp_require_tls: true
+
+# Route configuration
+route:
+  # Default receiver
+  receiver: 'email-alerts'
+  # Group alerts by alertname
+  group_by: ['alertname', 'severity']
+  # Wait before sending first notification
+  group_wait: 10s
+  # Wait before sending notification about new alerts in group
+  group_interval: 5m
+  # Wait before resending notification
+  repeat_interval: 1h
+
+  # Child routes for specific alerts
+  routes:
+    - match:
+        severity: critical
+      receiver: 'email-alerts'
+      group_wait: 5s
+      repeat_interval: 15m
+
+receivers:
+  - name: 'email-alerts'
+    email_configs:
+      - to: 'damiankob12@gmail.com'
+        send_resolved: true
+        headers:
+          subject: '{{ template "email.default.subject" . }}'
+        html: '{{ template "email.default.html" . }}'
+
+# Inhibition rules
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname']
+
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
