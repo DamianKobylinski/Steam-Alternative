@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { FC } from "react";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 interface ShelfProps {
   name: string;
 }
 
 const Shelf: FC<ShelfProps> = async ({ name }) => {
-  const prisma = new PrismaClient();
   const allGames = await prisma.games.findMany({
     orderBy:
       name == "New Games" ? { release_date: "desc" } : { popularity: "desc" },
@@ -17,7 +16,7 @@ const Shelf: FC<ShelfProps> = async ({ name }) => {
   return (
     <>
       <p className="text-3xl my-4 text-white font-">{name}</p>
-      <div className="mt-4 flex flex-wrap w-full justify-center lg:justify-start gap-10 overflow-hidden py-4">
+      <div className="mt-4 flex flex-wrap w-full justify-center lg:justify-start gap-10 overflow-hidden p-10">
         {allGames.slice(0, 5).map((item) => (
           <div
             key={item.game_id}

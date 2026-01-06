@@ -13,6 +13,8 @@ import {
 import { Sheet } from "@/components/ui/sheet";
 import CardList from "@/components/CartList";
 import { Dialog } from "@/components/ui/dialog";
+import { ThemeProvider } from "next-themes";
+import LoginTracker from "@/components/LoginTracker";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,32 +42,40 @@ export default function RootLayout({
 
   return (
     <ClerkProvider>
-      <html lang="en" className={darkMode ? "dark" : ""}>
+      <html lang="en" suppressHydrationWarning>
         <body
           className={`dark:--background  ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Dialog>
-            <Sheet>
-              <div className="flex gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
-                <div>
-                  <SignedOut>
-                    <SignInButton />
-                  </SignedOut>
-                  <SignedIn>
-                    <div className="flex gap-5 place-items-center">
-                      <UserButton />
-                    </div>
-                  </SignedIn>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            enableColorScheme
+          >
+            <Dialog>
+              <Sheet>
+                <div className="flex gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
+                  <div>
+                    <SignedOut>
+                      <SignInButton />
+                    </SignedOut>
+                    <SignedIn>
+                      <div className="flex gap-5 place-items-center">
+                        <UserButton />
+                        <LoginTracker />
+                      </div>
+                    </SignedIn>
+                  </div>
+                  <CardList />
                 </div>
-                <CardList />
-              </div>
-              <SidebarProvider>
-                <SidebarComponent />
-                <SidebarTrigger className="fixed z-10" />
-                <main className="w-full dark">{children}</main>
-              </SidebarProvider>
-            </Sheet>
-          </Dialog>
+                <SidebarProvider>
+                  <SidebarComponent />
+                  <SidebarTrigger className="fixed z-10 cursor-pointer" />
+                  <main className="flex w-3/5 mx-auto dark">{children}</main>
+                </SidebarProvider>
+              </Sheet>
+            </Dialog>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

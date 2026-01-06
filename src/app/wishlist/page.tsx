@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -9,8 +9,6 @@ const Wishlist: FC = async () => {
   if (!userId) {
     return redirectToSignIn();
   }
-
-  const prisma = new PrismaClient();
 
   const get_user_wishlist = await prisma.wishlist.findMany({
     where: {
