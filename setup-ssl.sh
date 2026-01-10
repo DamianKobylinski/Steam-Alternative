@@ -62,6 +62,12 @@ pgadmin.$DOMAIN.nip.io {
     tls internal
     reverse_proxy localhost:15432
 }
+
+# Photos Server (FastAPI)
+photos.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:8000
+}
 EOF
 
 echo "Caddyfile created with self-signed TLS"
@@ -83,6 +89,7 @@ echo "  Prometheus:  https://prometheus.$DOMAIN.nip.io"
 echo "  Uptime Kuma: https://uptime.$DOMAIN.nip.io"
 echo "  Alertmanager:https://alertmanager.$DOMAIN.nip.io"
 echo "  pgAdmin:     https://pgadmin.$DOMAIN.nip.io"
+echo "  Photos:      https://photos.$DOMAIN.nip.io"
 echo ""
 echo "NOTE: Browser will show a security warning."
 echo "Click 'Advanced' -> 'Accept the Risk and Continue'"
