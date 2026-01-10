@@ -14,6 +14,10 @@ PHOTOS_FOLDER = "photos"
 def home():
     return {"message": "Welcome to the Home Page"}
 
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "photos-service"}
+
 @app.get("/image/{image_name}")
 def get_image(image_name: str):
     image_path = os.path.join(PHOTOS_FOLDER, image_name)

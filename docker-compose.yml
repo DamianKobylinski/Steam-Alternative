@@ -54,12 +54,12 @@ services:
     env_file:
       - .env
     network_mode: host
+    user: root
     depends_on:
       postgres_service:
         condition: service_healthy
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-      - pgadmin-sessions:/var/lib/pgadmin/sessions
     environment:
       PGADMIN_LISTEN_PORT: 15432
 
