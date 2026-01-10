@@ -1,33 +1,34 @@
 # Caddyfile for Steam Alternative
-# Replace YOUR-IP with your VPS IP (use dashes instead of dots)
-# Example: 143-198-100-50.traefik.me
+# Using sslip.io for free wildcard DNS with SSL
+# Format: subdomain.IP-WITH-DASHES.sslip.io
+# Example: 139-59-144-215.sslip.io
 
 # Main Next.js app
-{$DOMAIN:localhost}.traefik.me {
+{$DOMAIN:localhost}.sslip.io {
     reverse_proxy localhost:3000
 }
 
 # Grafana dashboard
-grafana.{$DOMAIN:localhost}.traefik.me {
+grafana.{$DOMAIN:localhost}.sslip.io {
     reverse_proxy localhost:3001
 }
 
 # Prometheus metrics
-prometheus.{$DOMAIN:localhost}.traefik.me {
-    reverse_proxy localhost:9090
+prometheus.{$DOMAIN:localhost}.sslip.io {
+    reverse_proxy localhost:3001
 }
 
 # Uptime Kuma status page
-uptime.{$DOMAIN:localhost}.traefik.me {
+uptime.{$DOMAIN:localhost}.sslip.io {
     reverse_proxy localhost:3002
 }
 
 # Alertmanager
-alertmanager.{$DOMAIN:localhost}.traefik.me {
+alertmanager.{$DOMAIN:localhost}.sslip.io {
     reverse_proxy localhost:9093
 }
 
 # pgAdmin (optional - consider security)
-pgadmin.{$DOMAIN:localhost}.traefik.me {
+pgadmin.{$DOMAIN:localhost}.sslip.io {
     reverse_proxy localhost:15432
 }
