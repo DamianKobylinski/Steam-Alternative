@@ -168,9 +168,9 @@ export default async function GamePage({
                     prod_id: (game as any).prod_id ?? 0,
                     take_a_look: (game as any).take_a_look ?? false,
                   }}
-                  check_if_in_library={null}
-                  check_if_in_salary={null}
-                  check_if_in_wishlist={null}
+                  check_if_in_library={libraryEntry ? { id: libraryEntry.id, game_id: String(gameId), user_id: userId ? Number(userId) : 0 } : null}
+                  check_if_in_salary={salaryInfo ? { id: salaryInfo.id, game_id: String(salaryInfo.game_id), percent_of_bargain: Number(salaryInfo.percent_of_bargain), discount_code: salaryInfo.discount_code ?? '' } : null}
+                  check_if_in_wishlist={wishlistEntry ? { id: wishlistEntry.id, game_id: gameId, user_id: userId ?? '' } : null}
                 />
               </SignedIn>
 
