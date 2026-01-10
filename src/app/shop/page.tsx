@@ -47,7 +47,7 @@ const GamePage: FC = async () => {
                   <p className="font-bold w-1/2">{item.title}</p>
                   {salaryGames.find((game) => game.game_id === item.game_id) ? (
                     <p className="bg-[#2a7e1c] w-1/2 text-end text-[#f8d818] p-2 rounded-xl font-bold">
-                      $
+                      
                       {(
                         ((Number(item.price) ?? 0) *
                           (100 -
@@ -58,11 +58,11 @@ const GamePage: FC = async () => {
                             ) ?? 0))) /
                         100
                       ).toFixed(2)}{" "}
-                      $
+                      PLN
                     </p>
                   ) : (
                     <p className="bg-white w-1/2 text-end text-black p-2 rounded-xl font-bold">
-                      ${item.price.toString()} $
+                      {item.price.toString()} PLN
                     </p>
                   )}
                 </div>

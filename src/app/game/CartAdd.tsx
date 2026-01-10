@@ -113,7 +113,7 @@ const CartAdd: FC<CartAddProps> = ({
                 check_if_in_salary ? `text-[#f8d818]` : `text-white-500`
               } `}
             >
-              {gamePrice.toFixed(2)} $
+              {gamePrice.toFixed(2)} PLN
             </p>
           </button>
           <WishlistButton
