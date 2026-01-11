@@ -83,20 +83,21 @@ const CardList = () => {
             )}
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-5">
+        <div className="mt-5 space-y-3">
           {cartItem.map((item) => (
             <div
               key={item.game_id}
-              className="grid grid-cols-4 justify-center place-items-center gap-4"
+              className="grid grid-cols-2 md:grid-cols-4 justify-center place-items-center gap-2 md:gap-4 p-2 rounded-lg bg-muted/50"
             >
               <img
                 src={item.image_url}
                 width={50}
                 height={20}
                 alt={item.title}
+                className="rounded"
               />
-              <h3>{item.title}</h3>
-              <p>{item.price}</p>
+              <h3 className="text-sm md:text-base truncate max-w-[100px] md:max-w-none">{item.title}</h3>
+              <p className="text-sm md:text-base">{item.price}</p>
               <Button
                 variant={"default"}
                 onClick={() => {

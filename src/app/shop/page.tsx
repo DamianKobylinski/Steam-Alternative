@@ -26,9 +26,9 @@ const GamePage: FC = async () => {
   const salaryGames = await prisma.salary.findMany();
 
   return (
-    <div className="p-10">
-      <p className="text-4xl text-white">Shop</p>
-      <div className="flex flex-wrap gap-10 my-4">
+    <div className="p-4 md:p-10 w-full">
+      <p className="text-2xl md:text-4xl text-white">Shop</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-10 my-4 place-items-center">
         {allGames.map((item) => (
           <div
             key={item.game_id}
