@@ -30,7 +30,21 @@ cat > Caddyfile << EOF
 # Main Next.js app
 $DOMAIN.nip.io {
     tls internal
-    reverse_proxy localhost:3000
+    
+    # Proxy /image/* to photos server (same cert, no warnings)
+    handle /image/* {
+        reverse_proxy localhost:8000
+    }
+
+    # Proxy /bg/* to photos server (same cert, no warnings)
+    handle /bg/* {
+        reverse_proxy localhost:8000
+    }
+    
+    # Everything else goes to Next.js
+    handle {
+        reverse_proxy localhost:3000
+    }
 }
 
 # Grafana dashboard
@@ -62,12 +76,6 @@ pgadmin.$DOMAIN.nip.io {
     tls internal
     reverse_proxy localhost:15432
 }
-
-# Photos Server (FastAPI)
-photos.$DOMAIN.nip.io {
-    tls internal
-    reverse_proxy localhost:8000
-}
 EOF
 
 echo "Caddyfile created with self-signed TLS"
@@ -89,7 +97,6 @@ echo "  Prometheus:  https://prometheus.$DOMAIN.nip.io"
 echo "  Uptime Kuma: https://uptime.$DOMAIN.nip.io"
 echo "  Alertmanager:https://alertmanager.$DOMAIN.nip.io"
 echo "  pgAdmin:     https://pgadmin.$DOMAIN.nip.io"
-echo "  Photos:      https://photos.$DOMAIN.nip.io"
 echo ""
 echo "NOTE: Browser will show a security warning."
 echo "Click 'Advanced' -> 'Accept the Risk and Continue'"
