@@ -1,34 +1,49 @@
-# Caddyfile for Steam Alternative
-# Using sslip.io for free wildcard DNS with SSL
-# Format: subdomain.IP-WITH-DASHES.sslip.io
-# Example: 139-59-144-215.sslip.io
-
 # Main Next.js app
-{$DOMAIN:localhost}.sslip.io {
-    reverse_proxy localhost:3000
+$DOMAIN.nip.io {
+    tls internal
+    
+    # Proxy /image/* to photos server (same cert, no warnings)
+    handle /image/* {
+        reverse_proxy localhost:8000
+    }
+
+    # Proxy /bg/* to photos server (same cert, no warnings)
+    handle /bg/* {
+        reverse_proxy localhost:8000
+    }
+    
+    # Everything else goes to Next.js
+    handle {
+        reverse_proxy localhost:3000
+    }
 }
 
 # Grafana dashboard
-grafana.{$DOMAIN:localhost}.sslip.io {
+grafana.$DOMAIN.nip.io {
+    tls internal
     reverse_proxy localhost:3001
 }
 
 # Prometheus metrics
-prometheus.{$DOMAIN:localhost}.sslip.io {
-    reverse_proxy localhost:3001
+prometheus.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:9090
 }
 
 # Uptime Kuma status page
-uptime.{$DOMAIN:localhost}.sslip.io {
+uptime.$DOMAIN.nip.io {
+    tls internal
     reverse_proxy localhost:3002
 }
 
 # Alertmanager
-alertmanager.{$DOMAIN:localhost}.sslip.io {
+alertmanager.$DOMAIN.nip.io {
+    tls internal
     reverse_proxy localhost:9093
 }
 
-# pgAdmin (optional - consider security)
-pgadmin.{$DOMAIN:localhost}.sslip.io {
+# pgAdmin
+pgadmin.$DOMAIN.nip.io {
+    tls internal
     reverse_proxy localhost:15432
 }
