@@ -18,7 +18,7 @@ echo ""
 
 # Clear old Caddy certificates to force fresh issuance
 echo "Clearing old certificates..."
-docker compose down caddy 2>/dev/null || true
+docker-compose down -d caddy 2>/dev/null || true
 docker volume rm steam-alternative_caddy-data 2>/dev/null || true
 
 # Create Caddyfile with self-signed TLS (works immediately, browser warning)
@@ -83,7 +83,7 @@ echo ""
 
 # Start Caddy
 echo "Starting Caddy..."
-docker compose up -d caddy
+docker-compose up -d --build
 
 echo ""
 echo "========================================"
