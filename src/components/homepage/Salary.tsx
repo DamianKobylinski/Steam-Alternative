@@ -36,7 +36,7 @@ const Salary: FC<SalaryProps> = ({ sale, data }) => {
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
-      className="flex flex-col h-96 pt-5 w-full sm:w-[400px] lg:w-[600px] rounded-xl"
+      className="flex flex-col h-64 sm:h-80 lg:h-96 pt-3 sm:pt-5 w-full sm:w-[350px] lg:w-[600px] rounded-xl"
     >
       <ul className="flex justify-center">
         {sale.map((game) => (
@@ -65,9 +65,9 @@ const Salary: FC<SalaryProps> = ({ sale, data }) => {
           style={{
             boxShadow: "inset 0px 10px 20px rgba(0, 0, 0, 0.5)",
           }}
-          className="flex place-items-center justify-center h-14 px-4 w-full bg-[#2a7e1c]"
+          className="flex place-items-center justify-center h-10 sm:h-12 lg:h-14 px-4 w-full bg-[#2a7e1c]"
         >
-          <p className="text-white text-4xl font-bold tracking-widest">
+          <p className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold tracking-widest">
             -
             {sale
               .find((item) => item.game_id === salaryGame.game_id)

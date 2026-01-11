@@ -32,9 +32,9 @@ const Home = async () => {
   }));
 
   return (
-    <div className="p-10">
-      <p className="text-6xl my-4 text-white">Home</p>
-      <p className="text-3xl my-4 text-white">Take a Look</p>
+    <div className="p-4 md:p-10 w-full">
+      <p className="text-3xl md:text-4xl lg:text-6xl my-4 text-white">Home</p>
+      <p className="text-xl md:text-2xl lg:text-3xl my-4 text-white">Take a Look</p>
       <div className="flex flex-col place-items-center lg:flex-row gap-5">
         <Popular data={popular} />
         <Salary sale={salary} data={games_for_sale} />

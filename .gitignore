@@ -171,3 +171,5 @@ next-env.d.ts
 .vscode/*.json
 .vscode/**/settings.json
 .vscode/**/tasks.jsondatabase/data/
+
+backups/*.sql

@@ -1,0 +1,49 @@
+# Main Next.js app
+$DOMAIN.nip.io {
+    tls internal
+    
+    # Proxy /image/* to photos server (same cert, no warnings)
+    handle /image/* {
+        reverse_proxy localhost:8000
+    }
+
+    # Proxy /bg/* to photos server (same cert, no warnings)
+    handle /bg/* {
+        reverse_proxy localhost:8000
+    }
+    
+    # Everything else goes to Next.js
+    handle {
+        reverse_proxy localhost:3000
+    }
+}
+
+# Grafana dashboard
+grafana.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:3001
+}
+
+# Prometheus metrics
+prometheus.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:9090
+}
+
+# Uptime Kuma status page
+uptime.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:3002
+}
+
+# Alertmanager
+alertmanager.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:9093
+}
+
+# pgAdmin
+pgadmin.$DOMAIN.nip.io {
+    tls internal
+    reverse_proxy localhost:15432
+}

@@ -54,13 +54,13 @@ export default function RootLayout({
           >
             <Dialog>
               <Sheet>
-                <div className="flex gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-5 z-10">
+                <div className="flex gap-3 md:gap-5 lg:gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-2 md:mx-5 z-10">
                   <div>
                     <SignedOut>
                       <SignInButton />
                     </SignedOut>
                     <SignedIn>
-                      <div className="flex gap-5 place-items-center">
+                      <div className="flex gap-3 md:gap-5 place-items-center">
                         <UserButton />
                         <LoginTracker />
                       </div>
@@ -71,7 +71,7 @@ export default function RootLayout({
                 <SidebarProvider>
                   <SidebarComponent />
                   <SidebarTrigger className="fixed z-10 cursor-pointer" />
-                  <main className="flex w-3/5 mx-auto dark">{children}</main>
+                  <main className="flex w-full px-2 md:px-6 lg:w-4/5 xl:w-3/5 mx-auto dark">{children}</main>
                 </SidebarProvider>
               </Sheet>
             </Dialog>
