@@ -6,6 +6,9 @@ set -e
 PUBLIC_IP=$(curl -s ifconfig.me)
 DOMAIN=$(echo $PUBLIC_IP | tr '.' '-')
 
+# Export for docker-compose
+export DOMAIN
+
 echo "========================================"
 echo "Steam Alternative SSL Setup"
 echo "========================================"
@@ -15,7 +18,7 @@ echo "Your domain: $DOMAIN.nip.io"
 echo ""
 
 echo "Clearing old certificates..."
-docker-compose down -d caddy 2>/dev/null || true
+docker-compose down 2>/dev/null || true
 docker volume rm steam-alternative_caddy-data 2>/dev/null || true
 
 docker-compose up -d --build

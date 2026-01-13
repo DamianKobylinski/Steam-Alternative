@@ -139,6 +139,8 @@ services:
     image: caddy:2-alpine
     restart: unless-stopped
     network_mode: host
+    environment:
+      DOMAIN: ${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
