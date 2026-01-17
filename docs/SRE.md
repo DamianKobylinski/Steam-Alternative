@@ -11,7 +11,7 @@ Dokument ten definiuje standardy niezawodności (Reliability) dla platformy Stea
 
 ## 2. Zdefiniowane Usługi i Cele
 
-### 2.1. Aplikacja Frontendowa (Next.js)
+### 2.1. Aplikacja 
 
 Główny interfejs dla użytkowników końcowych.
 
@@ -19,27 +19,27 @@ Główny interfejs dla użytkowników końcowych.
     *   **SLI**: Odsetek żądań HTTP zakończonych kodem innym niż 5xx.
     *   **SLO**: 99.9% w skali miesiąca.
     *   **SLA**: 99.5% w skali miesiąca.
-    *   **Budżet Błędu**: ~43 minuty niedostępności miesięcznie (dla SLO 99.9%).
+    *   **Budżet Błędu**: ~43 minuty niedostępności miesięcznie.
 
 *   **Opóźnienie (Latency)**
     *   **SLI**: Odsetek żądań obsłużonych w czasie poniżej 500ms (P95).
     *   **SLO**: 95% żądań < 500ms.
     *   **SLA**: Brak formalnego SLA dla czasu odpowiedzi, cel internalny.
 
-### 2.2. Baza Danych (PostgreSQL)
+### 2.2. Baza Danych
 
 Krytyczny komponent przechowujący stan aplikacji.
 
 *   **Dostępność (Availability)**
-    *   **SLI**: Odsetek udanych połączeń i zapytań (Query Success Rate).
-    *   **SLO**: 99.95% w skali miesiąca.
+    *   **SLI**: Odsetek udanych połączeń i zapytań.
+    *   **SLO**: 99.9% w skali miesiąca.
     *   **SLA**: 99.9% w skali miesiąca.
 
 *   **Wydajność (Performance)**
     *   **SLI**: Czas wykonania zapytania (Query Duration).
     *   **SLO**: 99% zapytań < 1s.
 
-### 2.3. Serwis Zdjęć (Microservice)
+### 2.3. Mikorserwis Zdjęć
 
 Serwis odpowiedzialny za serwowanie statycznych assetów.
 
@@ -56,12 +56,4 @@ Serwis odpowiedzialny za serwowanie statycznych assetów.
     *   Zespół inżynierski skupia się wyłącznie na poprawie stabilności i niezawodności (Reliability Sprint).
     *   Wyjątkiem są krytyczne poprawki bezpieczeństwa.
 
-## 4. Monitorowanie i Alerty
 
-Monitorowanie odbywa się za pomocą stacku Prometheus + Grafana.
-
-*   **Alerty Szybkie (Fast Burn)**: Gdy budżet błędu zużywa się w tempie, które wyczerpie go w ciągu 1 godziny. Wymaga natychmiastowej reakcji (Page).
-*   **Alerty Wolne (Slow Burn)**: Gdy budżet błędu zużywa się w tempie, które wyczerpie go w ciągu 3 dni. Wymaga reakcji w godzinach pracy (Ticket).
-
----
-*Dokument utrzymywany przez zespół SRE.*
