@@ -131,15 +131,6 @@ export async function measureDuration<T>(
 // Additional Histograms
 // ==========================================
 
-// Search query duration histogram
-export const searchQueryDuration = new Histogram({
-  name: "search_query_duration_seconds",
-  help: "Duration of game search queries in seconds",
-  labelNames: ["query_type"],
-  buckets: [0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
-  registers: [register],
-});
-
 // Payment processing duration histogram
 export const paymentProcessingDuration = new Histogram({
   name: "payment_processing_duration_seconds",

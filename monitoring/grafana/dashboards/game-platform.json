@@ -754,30 +754,21 @@
           "color": {
             "mode": "thresholds"
           },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {
-                "color": "blue",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 5
-              },
-              {
-                "color": "yellow",
-                "value": 20
-              },
-              {
-                "color": "orange",
-                "value": 50
-              },
-              {
-                "color": "red",
-                "value": 100
-              }
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "orange", "value": 20 },
+              { "color": "red", "value": 50 }
             ]
           }
         },
@@ -794,7 +785,7 @@
         "basemap": {
           "config": {},
           "name": "Basemap",
-          "type": "carto"
+          "type": "osm-standard"
         },
         "controls": {
           "mouseWheelZoom": true,
@@ -810,32 +801,17 @@
               "showLegend": true,
               "style": {
                 "color": {
-                  "field": "Value",
-                  "fixed": "dark-green"
+                  "fixed": "red"
                 },
-                "opacity": 0.8,
-                "rotation": {
-                  "fixed": 0,
-                  "max": 360,
-                  "min": -360,
-                  "mode": "mod"
-                },
+                "opacity": 0.7,
                 "size": {
-                  "field": "Value",
                   "fixed": 10,
-                  "max": 30,
+                  "max": 15,
                   "min": 5
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/circle.svg",
                   "mode": "fixed"
-                },
-                "textConfig": {
-                  "fontSize": 12,
-                  "offsetX": 0,
-                  "offsetY": 0,
-                  "textAlign": "center",
-                  "textBaseline": "middle"
                 }
               }
             },
@@ -844,7 +820,7 @@
               "longitude": "longitude",
               "mode": "coords"
             },
-            "name": "User Logins",
+            "name": "Logins",
             "tooltip": true,
             "type": "markers"
           }
@@ -854,10 +830,10 @@
         },
         "view": {
           "allLayers": true,
-          "id": "europe",
-          "lat": 50,
-          "lon": 10,
-          "zoom": 3
+          "id": "coords",
+          "lat": 52,
+          "lon": 19,
+          "zoom": 5
         }
       },
       "pluginVersion": "10.0.0",
@@ -867,10 +843,9 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum by (country, country_code, latitude, longitude) (user_logins_by_country_total{job=\"nextjs-app\"})",
+          "expr": "user_logins_by_country_total{job=\"nextjs-app\"}",
           "format": "table",
           "instant": true,
-          "legendFormat": "{{country}}",
           "refId": "A"
         }
       ],
@@ -1151,64 +1126,6 @@
       "panels": [],
       "title": "Performance Histograms",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": { "group": "A", "mode": "none" },
-            "thresholdsStyle": { "mode": "off" }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [{ "color": "green", "value": null }]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 58 },
-      "id": 107,
-      "options": {
-        "legend": { "calcs": ["mean", "max", "p95"], "displayMode": "table", "placement": "bottom", "showLegend": true },
-        "tooltip": { "mode": "multi", "sort": "desc" }
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.95, rate(search_query_duration_seconds_bucket{job=\"nextjs-app\"}[5m]))",
-          "legendFormat": "p95 Search",
-          "refId": "A"
-        },
-        {
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "histogram_quantile(0.50, rate(search_query_duration_seconds_bucket{job=\"nextjs-app\"}[5m]))",
-          "legendFormat": "p50 Search",
-          "refId": "B"
-        }
-      ],
-      "title": "Search Query Duration",
-      "type": "timeseries"
     },
     {
       "datasource": {
