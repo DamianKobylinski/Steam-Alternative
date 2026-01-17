@@ -1,0 +1,48 @@
+groups:
+  - name: slo_recording_rules
+    rules:
+      #
+      # SLI: Frontend Availability
+      # Ratio of successful HTTP requests (non-5xx) to total requests
+      #
+      - record: job:http_requests_success:rate5m
+        expr: |
+          sum(rate(http_requests_total{status_code!~"5.*"}[5m])) by (job)
+      
+      - record: job:http_requests_total:rate5m
+        expr: |
+          sum(rate(http_requests_total[5m])) by (job)
+
+      - record: slo:service_availability:ratio
+        expr: |
+          job:http_requests_success:rate5m / job:http_requests_total:rate5m
+
+      #
+      # SLI: Frontend Latency
+      # Ratio of requests faster than 0.5s
+      # Assumes a histogram metric http_request_duration_seconds_bucket exists
+      #
+      - record: job:http_request_duration_seconds_bucket:rate5m
+        expr: |
+          sum(rate(http_request_duration_seconds_bucket[5m])) by (le, job)
+
+      - record: slo:service_latency:ratio
+        expr: |
+           sum(job:http_request_duration_seconds_bucket:rate5m{le="0.5"}) by (job)
+           /
+           sum(job:http_request_duration_seconds_bucket:rate5m{le="+Inf"}) by (job)
+
+      #
+      # SLI: Database Availability
+      # Inverse of connection failure and query failure rate
+      #
+      - record: job:database_queries_success:rate5m
+        expr: |
+          sum(rate(database_query_failures_total[5m])) by (job) == 0 or vector(1) 
+          # Note: Real implementation depends on total query count metric availability.
+          # If we only have failures, we can't calculate a pure ratio without total.
+          # Assuming we have database_query_total for now. If not, this is a placeholder.
+
+      # Using simple up metric for availability if specific request metrics are missing
+      - record: slo:service_up:ratio
+        expr: avg_over_time(up[5m])
