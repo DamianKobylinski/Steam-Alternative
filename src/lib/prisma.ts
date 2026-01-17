@@ -15,6 +15,7 @@ const prismaClientSingleton = () => {
 
 declare const globalThis: {
   prismaGlobal: ReturnType<typeof prismaClientSingleton>;
+  dbHealthCheckInterval?: ReturnType<typeof setInterval>;
 } & typeof global;
 
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
@@ -47,6 +48,54 @@ export async function withDbTracking<T>(
     
     throw error;
   }
+}
+
+// ==========================================
+// Active Database Health Check
+// ==========================================
+
+const DB_HEALTH_CHECK_INTERVAL_MS = 30_000; // 30 seconds
+
+/**
+ * Check database connectivity and update the connection status metric
+ */
+async function checkDatabaseHealth(): Promise<void> {
+  try {
+    // Simple query to check if database is reachable
+    await prisma.$queryRaw`SELECT 1`;
+    databaseConnectionStatus.set(1);
+  } catch (error) {
+    console.error('[Database Health Check] Connection failed:', error instanceof Error ? error.message : 'Unknown error');
+    databaseConnectionStatus.set(0);
+  }
+}
+
+/**
+ * Start active database health check
+ */
+export function startDatabaseHealthCheck(): void {
+  if (globalThis.dbHealthCheckInterval) return; // Already running
+  
+  // Check immediately
+  checkDatabaseHealth();
+  
+  // Then check periodically
+  globalThis.dbHealthCheckInterval = setInterval(checkDatabaseHealth, DB_HEALTH_CHECK_INTERVAL_MS);
+}
+
+/**
+ * Stop active database health check
+ */
+export function stopDatabaseHealthCheck(): void {
+  if (globalThis.dbHealthCheckInterval) {
+    clearInterval(globalThis.dbHealthCheckInterval);
+    globalThis.dbHealthCheckInterval = undefined;
+  }
+}
+
+// Auto-start health check when module is imported (server-side only)
+if (typeof window === 'undefined') {
+  startDatabaseHealthCheck();
 }
 
 export default prisma;

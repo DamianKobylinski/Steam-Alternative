@@ -34,6 +34,18 @@ groups:
           description: "PostgreSQL exporter has been unreachable for more than 1 minute. Database monitoring is unavailable."
           time: "{{ with query \"time()\" }}{{ . | first | value | humanizeTimestamp }}{{ end }}"
 
+      # Alert when postgres_exporter cannot connect to database
+      - alert: PostgresDatabaseConnectionFailed
+        expr: pg_up{job="postgresql"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL database connection failed"
+          description: "postgres_exporter cannot connect to PostgreSQL database for more than 30 seconds."
+          time: "{{ with query \"time()\" }}{{ . | first | value | humanizeTimestamp }}{{ end }}"
+
+
       # Alert when database query latency is high
       - alert: DatabaseHighLatency
         expr: histogram_quantile(0.95, rate(database_query_duration_seconds_bucket[5m])) > 1
