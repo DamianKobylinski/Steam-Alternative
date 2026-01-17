@@ -793,8 +793,8 @@
       "options": {
         "basemap": {
           "config": {},
-          "name": "Layer 0",
-          "type": "default"
+          "name": "Basemap",
+          "type": "carto"
         },
         "controls": {
           "mouseWheelZoom": true,
@@ -810,9 +810,10 @@
               "showLegend": true,
               "style": {
                 "color": {
+                  "field": "Value",
                   "fixed": "dark-green"
                 },
-                "opacity": 0.6,
+                "opacity": 0.8,
                 "rotation": {
                   "fixed": 0,
                   "max": 360,
@@ -821,9 +822,9 @@
                 },
                 "size": {
                   "field": "Value",
-                  "fixed": 5,
+                  "fixed": 10,
                   "max": 30,
-                  "min": 10
+                  "min": 5
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/circle.svg",
@@ -853,10 +854,10 @@
         },
         "view": {
           "allLayers": true,
-          "id": "zero",
-          "lat": 30,
-          "lon": 0,
-          "zoom": 2
+          "id": "europe",
+          "lat": 50,
+          "lon": 10,
+          "zoom": 3
         }
       },
       "pluginVersion": "10.0.0",
