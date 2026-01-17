@@ -25,8 +25,8 @@ async function trackPageView(page: string, method: string, baseUrl: string) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ page, method }),
     });
-  } catch {
-    // Silently fail - don't block the request
+  } catch (error) {
+    console.error("Error in trackPageView:", error);
   }
 }
 
@@ -36,11 +36,18 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   
   // Track page views for GET requests on tracked pages
   if (method === "GET") {
+    // console.log("Middleware processing:", pathname); // Commented out to reduce noise, enable if needed
     const pageName = getPageName(pathname);
     if (pageName) {
+      console.log(`Tracking page view for: ${pageName}`);
       // Fire and forget - don't await
-      const baseUrl = req.nextUrl.origin;
-      trackPageView(pageName, method, baseUrl);
+      // Use localhost for reliable internal communication
+      const baseUrl = "http://localhost:3000";
+      trackPageView(pageName, method, baseUrl)
+        .then(() => console.log("Track page view success"))
+        .catch(err => {
+          console.error("Failed to track page view details:", err);
+        });
     }
   }
   
