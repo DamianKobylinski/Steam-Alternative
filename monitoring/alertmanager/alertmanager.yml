@@ -1,20 +1,12 @@
 global:
   resolve_timeout: 5m
 
-# Route configuration
 route:
-  # Default receiver
   receiver: "discord-alerts"
-  # Group alerts by alertname
   group_by: ["alertname", "severity"]
-  # Wait before sending first notification
   group_wait: 10s
-  # Wait before sending notification about new alerts in group
   group_interval: 5m
-  # Wait before resending notification
   repeat_interval: 1h
-
-  # Child routes for specific alerts
   routes:
     - match:
         severity: critical
@@ -35,7 +27,6 @@ receivers:
           {{ .Annotations.description }}
           {{ end }}
 
-# Inhibition rules
 inhibit_rules:
   - source_match:
       severity: "critical"

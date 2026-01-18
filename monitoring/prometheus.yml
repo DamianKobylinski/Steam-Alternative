@@ -12,26 +12,22 @@ rule_files:
   - "/etc/prometheus/recording_rules.yml"
 
 scrape_configs:
-  # Prometheus self-monitoring
   - job_name: "prometheus"
     static_configs:
       - targets: ["localhost:9090"]
 
-  # Next.js web application metrics
   - job_name: "nextjs-app"
     static_configs:
       - targets: ["localhost:3000"]
     metrics_path: "/api/metrics"
     scrape_interval: 10s
 
-  # FastAPI photos service metrics
   - job_name: "photos-service"
     static_configs:
       - targets: ["localhost:8000"]
     metrics_path: "/metrics"
     scrape_interval: 10s
 
-  # PostgreSQL metrics via postgres_exporter
   - job_name: "postgresql"
     static_configs:
       - targets: ["localhost:9187"]
