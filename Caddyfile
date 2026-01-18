@@ -1,4 +1,3 @@
-# Main Next.js app
 {$DOMAIN}.nip.io {
     tls {
         on_demand
