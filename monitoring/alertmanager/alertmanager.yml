@@ -17,7 +17,7 @@ route:
 receivers:
   - name: "discord-alerts"
     discord_configs:
-      - webhook_url: "${DISCORD_WEBHOOK_URL}"
+      - webhook_url: ${DISCORD_WEBHOOK_URL}
         send_resolved: true
         title: '{{ if eq .Status "firing" }}🚨 ALERT{{ else }}✅ RESOLVED{{ end }}'
         message: |
