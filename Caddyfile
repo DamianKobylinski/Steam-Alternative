@@ -1,7 +1,5 @@
 {$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     
     handle /image/* {
         reverse_proxy localhost:8000
@@ -17,36 +15,26 @@
 }
 
 grafana.{$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     reverse_proxy localhost:3001
 }
 
 prometheus.{$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     reverse_proxy localhost:9090
 }
 
 uptime.{$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     reverse_proxy localhost:3002
 }
 
 alertmanager.{$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     reverse_proxy localhost:9093
 }
 
 pgadmin.{$DOMAIN}.nip.io {
-    tls {
-        on_demand
-    }
+
     reverse_proxy localhost:15432
 }
