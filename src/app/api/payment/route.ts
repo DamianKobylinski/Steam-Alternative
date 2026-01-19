@@ -4,6 +4,8 @@ import {
   httpRequestsTotal,
   httpRequestDuration,
   paymentSessionsTotal,
+  paymentProcessingDuration,
+  externalApiLatency,
 } from "@/lib/metrics";
 
 // Lazy-initialize Stripe to avoid build-time errors
@@ -78,6 +80,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Measure Stripe API call duration
+    const stripeStart = Date.now();
     const session = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -86,6 +90,19 @@ export async function POST(req: NextRequest) {
       cancel_url: `${req.headers.get("origin")}/cancel`,
       ...(Object.keys(discountParam).length > 0 && discountParam),
     });
+    const stripeDuration = (Date.now() - stripeStart) / 1000;
+    
+    // Record external API latency
+    externalApiLatency.observe(
+      { api_name: "stripe", endpoint: "checkout.sessions.create" },
+      stripeDuration
+    );
+    
+    // Record total payment processing duration
+    paymentProcessingDuration.observe(
+      { status: session.url ? "success" : "failed" },
+      (Date.now() - startTime) / 1000
+    );
 
     // This is the key check!
     if (!session.url) {

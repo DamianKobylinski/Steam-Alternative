@@ -63,7 +63,6 @@ services:
     environment:
       PGADMIN_LISTEN_PORT: 15432
 
-  # Prometheus metrics server
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
@@ -71,16 +70,16 @@ services:
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./monitoring/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./monitoring/prometheus/recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
       - prometheus-data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
-      - '--web.listen-address=:9090'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.listen-address=:9090"
 
-  # Alertmanager for email alerts
   alertmanager:
     image: prom/alertmanager:latest
     restart: unless-stopped
@@ -90,13 +89,12 @@ services:
       - ./monitoring/alertmanager/templates:/etc/alertmanager/templates:ro
       - alertmanager-data:/alertmanager
     command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
-      - '--web.listen-address=:9093'
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.listen-address=:9093"
     env_file:
       - .env
 
-  # Grafana dashboard
   grafana:
     image: grafana/grafana:latest
     restart: unless-stopped
@@ -113,7 +111,6 @@ services:
     depends_on:
       - prometheus
 
-  # PostgreSQL exporter for database metrics
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter:latest
     restart: unless-stopped
@@ -124,7 +121,6 @@ services:
       postgres_service:
         condition: service_healthy
 
-  # Uptime Kuma - Service status monitoring
   uptime_kuma:
     image: louislam/uptime-kuma:1
     restart: unless-stopped
@@ -134,11 +130,12 @@ services:
     environment:
       UPTIME_KUMA_PORT: 3002
 
-  # Caddy reverse proxy with automatic SSL
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
     network_mode: host
+    environment:
+      DOMAIN: ${DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data

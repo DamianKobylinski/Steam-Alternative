@@ -1,48 +1,35 @@
 global:
-  # SMTP server configuration for sending emails
-  smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'damiankob12@gmail.com'
-  smtp_auth_username: 'damiankob12@gmail.com'
-  smtp_auth_password: 'iipjcbvpecwsuobh'
-  smtp_require_tls: true
+  resolve_timeout: 5m
 
-# Route configuration
 route:
-  # Default receiver
-  receiver: 'email-alerts'
-  # Group alerts by alertname
-  group_by: ['alertname', 'severity']
-  # Wait before sending first notification
+  receiver: "discord-alerts"
+  group_by: ["alertname", "severity"]
   group_wait: 10s
-  # Wait before sending notification about new alerts in group
   group_interval: 5m
-  # Wait before resending notification
   repeat_interval: 1h
-
-  # Child routes for specific alerts
   routes:
     - match:
         severity: critical
-      receiver: 'email-alerts'
+      receiver: "discord-alerts"
       group_wait: 5s
       repeat_interval: 15m
 
 receivers:
-  - name: 'email-alerts'
-    email_configs:
-      - to: 'damiankob12@gmail.com'
+  - name: "discord-alerts"
+    discord_configs:
+      - webhook_url: "${DISCORD_WEBHOOK_URL}"
         send_resolved: true
-        headers:
-          subject: '{{ template "email.default.subject" . }}'
-        html: '{{ template "email.default.html" . }}'
+        title: '{{ if eq .Status "firing" }}🚨 ALERT{{ else }}✅ RESOLVED{{ end }}'
+        message: |
+          {{ range .Alerts }}
+          **{{ .Labels.alertname }}** ({{ .Labels.severity }})
+          {{ .Annotations.summary }}
+          {{ .Annotations.description }}
+          {{ end }}
 
-# Inhibition rules
 inhibit_rules:
   - source_match:
-      severity: 'critical'
+      severity: "critical"
     target_match:
-      severity: 'warning'
-    equal: ['alertname']
-
-templates:
-  - '/etc/alertmanager/templates/*.tmpl'
+      severity: "warning"
+    equal: ["alertname"]
