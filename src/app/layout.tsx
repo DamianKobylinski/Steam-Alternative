@@ -5,8 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarComponent from "@/components/Sidebar";
 import {
   ClerkProvider,
-  SignedIn,
-  SignedOut,
+  Show,
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
@@ -56,15 +55,15 @@ export default function RootLayout({
               <Sheet>
                 <div className="flex gap-3 md:gap-5 lg:gap-10 fixed rounded-xl cursor-pointer p-[10px] right-0 my-2 mx-2 md:mx-5 z-10">
                   <div>
-                    <SignedOut>
+                    <Show when="signed-out">
                       <SignInButton />
-                    </SignedOut>
-                    <SignedIn>
+                    </Show>
+                    <Show when="signed-in">
                       <div className="flex gap-3 md:gap-5 place-items-center">
                         <UserButton />
                         <LoginTracker />
                       </div>
-                    </SignedIn>
+                    </Show>
                   </div>
                   <CardList />
                 </div>

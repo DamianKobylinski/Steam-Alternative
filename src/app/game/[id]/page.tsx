@@ -1,7 +1,7 @@
 "use server";
 
 import { Badge } from "@/components/ui/badge";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { Show, SignInButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { MoveLeft } from "lucide-react";
 import Link from "next/link";
@@ -160,7 +160,7 @@ export default async function GamePage({
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 items-center justify-center lg:justify-start">
-              <SignedIn>
+              <Show when="signed-in">
                 <CartAdd
                   game={{
                     ...game,
@@ -172,15 +172,15 @@ export default async function GamePage({
                   check_if_in_salary={salaryInfo ? { id: salaryInfo.id, game_id: String(salaryInfo.game_id), percent_of_bargain: Number(salaryInfo.percent_of_bargain), discount_code: salaryInfo.discount_code ?? '' } : null}
                   check_if_in_wishlist={wishlistEntry ? { id: wishlistEntry.id, game_id: gameId, user_id: userId ?? '' } : null}
                 />
-              </SignedIn>
+              </Show>
 
-              <SignedOut>
+              <Show when="signed-out">
                 <SignInButton mode="modal">
                   <button className="text-2xl bg-red-600 hover:bg-red-700 text-white rounded-xl px-10 py-5 font-bold transition">
                     Sign in to Buy
                   </button>
                 </SignInButton>
-              </SignedOut>
+              </Show>
             </div>
           </div>
         </div>
