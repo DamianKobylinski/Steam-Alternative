@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM node:26-alpine AS base
 WORKDIR /app
 ARG DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"
 ARG STRIPE_SECRET_KEY="sk_test_placeholder"
@@ -13,24 +13,27 @@ ENV DATABASE_URL=${DATABASE_URL} \
     NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS deps
-COPY bun.lock package.json ./
-RUN bun install --frozen-lockfile
+COPY package-lock.json package.json prisma.config.ts ./
+COPY prisma ./prisma
+RUN npm ci
 
 FROM deps AS builder
 COPY . .
-RUN bun run build
+RUN npm run build
 
 FROM base AS runner-deps
-COPY bun.lock package.json ./
-RUN bun install --frozen-lockfile --production
+COPY package-lock.json package.json prisma.config.ts ./
+COPY prisma ./prisma
+RUN npm ci --omit=dev --ignore-scripts
 
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=runner-deps /app/node_modules ./node_modules
-COPY package.json bun.lock ./
+COPY package.json package-lock.json ./
+COPY --from=builder /app/generated ./generated
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 EXPOSE 3000
-USER bun
-CMD ["bun", "run", "start"]
+USER node
+CMD ["npm", "run", "start"]

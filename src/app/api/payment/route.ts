@@ -13,7 +13,7 @@ let stripe: Stripe | null = null;
 function getStripe() {
   if (!stripe) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-      apiVersion: "2025-11-17.clover",
+      apiVersion: "2026-10-28.endive",
     });
   }
   return stripe;
@@ -67,13 +67,20 @@ export async function POST(req: NextRequest) {
     }));
 
     // Handle discounts properly — ONLY if they are real Stripe Coupon IDs
-    let discountParam: { discounts?: { coupon: string }[] } = {};
+    const discountParam: { discounts?: { coupon: string }[] } = {};
 
     if (discounts && Array.isArray(discounts) && discounts.length > 0) {
       // Validate that each discount is a real coupon ID (starts with "coupon_")
       const validCoupons = discounts
-        .map((d: any) => d.discount)
-        .filter((couponId: string) => typeof couponId === "string" && couponId.startsWith("coupon_"));
+        .map((discount: unknown) =>
+          typeof discount === "object" && discount !== null && "discount" in discount
+            ? discount.discount
+            : undefined
+        )
+        .filter(
+          (couponId: unknown): couponId is string =>
+            typeof couponId === "string" && couponId.startsWith("coupon_")
+        );
 
       if (validCoupons.length > 0) {
         discountParam.discounts = validCoupons.map(coupon => ({ coupon }));
@@ -83,7 +90,6 @@ export async function POST(req: NextRequest) {
     // Measure Stripe API call duration
     const stripeStart = Date.now();
     const session = await getStripe().checkout.sessions.create({
-      payment_method_types: ["card"],
       mode: "payment",
       line_items: lineItems,
       success_url: `${req.headers.get("origin")}/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -127,12 +133,16 @@ export async function POST(req: NextRequest) {
       url: session.url 
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Stripe checkout error:", error);
 
     // Better error logging
-    const errorMessage = error?.message || "Unknown error";
-    const errorCode = error?.code || "unknown";
+    const stripeError = error instanceof Error ? error : undefined;
+    const errorMessage = stripeError?.message || "Unknown error";
+    const errorCode =
+      typeof error === "object" && error !== null && "code" in error
+        ? String(error.code)
+        : "unknown";
 
     paymentSessionsTotal.inc({ status: "error" });
     httpRequestsTotal.inc({ method: "POST", route, status_code: "500" });
